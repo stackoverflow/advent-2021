@@ -7,9 +7,8 @@ data = U.readProcessTestData 1 "\\n" Int32#parseInt(_)
 
 checkWindow : List Int32 -> Int64
 checkWindow list =
-  let size = List.size list
   let check i = (list ! (i + 1L)) > (list ! i)
-  List.count check (0L .. (size - 1L))
+  0L .. (List.lastIndex list) |> List.count check
 
 pub
 day1part1 : Unit -> Int64
