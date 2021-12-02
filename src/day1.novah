@@ -1,0 +1,22 @@
+module day1
+
+import util as U
+
+data : List Int
+data = U.readProcessTestData 1 "\\n" Int32#parseInt(_)
+
+checkWindow : List Int32 -> Int64
+checkWindow list =
+  let size = List.size list
+  let check i = (list ! (i + 1L)) > (list ! i)
+  List.count check (0L .. (size - 1L))
+
+pub
+day1part1 : Unit -> Int64
+day1part1 _ = checkWindow data
+
+pub
+day1part2 : Unit -> Int64
+day1part2 _ =
+  let newdata = List.partitionStep 3L 1L data |> List.map (List.foldl (+) 0)
+  checkWindow newdata

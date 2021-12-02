@@ -1,0 +1,10 @@
+{
+    "paths": ["src"],
+    "deps": {},
+    "aliases": {
+        "test": {
+            "extraPaths": ["test"],
+            "main": "test.main"
+        }
+    }
+}

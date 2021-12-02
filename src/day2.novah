@@ -1,0 +1,37 @@
+module day2
+
+import util as U
+
+toCoord : String -> { d : Int, h : Int }
+toCoord str =
+  let match = Re.findString """(\w+) (\d+)""" str
+  let amount = match ! 2L |> Int32#parseInt(_)
+  case match ! 1L of
+    "forward" -> { h: amount, d: 0 }
+    "up" -> { h: 0, d: amount * -1 }
+    _ -> { h: 0, d: amount }
+
+data : List { d : Int, h : Int }
+data = U.readProcessTestData 2 "\\n" toCoord
+
+pub
+day2part1 : Unit -> Int
+day2part1 _ =
+  let go {h: acch, d: accd} {h, d} =
+    { h: acch + (h : Int)
+    , d: accd + (d : Int)
+    }
+  let {h, d} = List.foldl go { h: 0, d: 0 } data
+  h * d
+
+pub
+day2part2 : Unit -> Int
+day2part2 _ =
+  let go {h: acch, d: accd, a: acca} {h, d, a} =
+    { h: (acch : Int) + h
+    , d: accd + h * acca
+    , a: acca + d
+    }
+  let newdata = List.map (\d -> { a: 0 | d }) data
+  let {h, d} = List.foldl go { h: 0, d: 0, a: 0 } newdata
+  h * d

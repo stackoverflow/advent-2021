@@ -1,0 +1,14 @@
+module util
+
+pub
+readTestData : Int -> String
+readTestData day =
+  let file = format "./resources/day%s.txt" [toString day]
+  IO.readText (IO.newFile file)
+
+pub
+readProcessTestData : Int -> String -> (String -> a) -> List a
+readProcessTestData day regex mapper =
+  readTestData day
+    |> String.split regex
+    |> List.map mapper

@@ -1,0 +1,21 @@
+module test.main
+
+import day1 as D1
+import day2 as D2
+import novah.test
+
+adventTest : Unit
+adventTest =
+  test "Day 1" \_ ->
+    D1.day1part1 () `shouldBe` 1754L
+    D1.day1part2 () `shouldBe` 1789L
+  
+  test "Day 2" \_ ->
+    D2.day2part1 () `shouldBe` 1250395
+    D2.day2part2 () `shouldBe` 1451210346
+
+pub
+main : Array String -> Unit
+main _ =
+  runAllTests ()
+  ()
