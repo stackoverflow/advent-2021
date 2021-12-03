@@ -1,0 +1,38 @@
+module day3
+
+import util as U
+
+data : List String
+data = U.readProcessTestData 3 "\\n" identity
+
+isChar : Int -> Char -> String -> Boolean
+isChar i c (str : String) = str#charAt(i) == c
+
+pub
+day3part1 : Unit -> Int
+day3part1 _ =
+  let threshold = (List.size data) / 2L
+  let invert c = if c == '0' then '1' else '0'
+  let gamma =
+    List.map (\i -> List.count (isChar i '1') data) (String.indices (data ! 0L))
+      |> List.map (\i -> if i >= threshold then '1' else '0')
+      |> String.fromList
+  let epsilon = String.mapString invert gamma
+  Int32#parseInt(gamma, 2) * Int32#parseInt(epsilon, 2)
+
+pub
+day3part2 : Unit -> Int
+day3part2 _ =
+  let divider ns i pred =
+    let char =
+      if List.count (isChar i '1') ns `pred` List.count (isChar i '0') ns then '1' else '0'
+    List.filter (isChar i char) ns
+  
+  let calculate dataa pred =
+    let go entries i =
+      if List.size entries == 1L then entries else divider entries i pred
+    (List.foldl go dataa (String.indices (dataa ! 0L))) ! 0L
+
+  let o2 = calculate data (>=) |> Int32#parseInt(_, 2)
+  let co2 = calculate data (<) |> Int32#parseInt(_, 2)
+  o2 * co2
