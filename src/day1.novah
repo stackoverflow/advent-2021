@@ -5,17 +5,17 @@ import util as U
 data : List Int
 data = U.readProcessTestData 1 "\\n" Int32#parseInt(_)
 
-checkWindow : List Int32 -> Int64
+checkWindow : List Int -> Int
 checkWindow list =
-  let check i = (list ! (i + 1L)) > (list ! i)
-  0L .. (List.lastIndex list) |> List.count check
+  let check i = (list ! (i + 1)) > (list ! i)
+  0 .. (List.lastIndex list) |> List.count check
 
 pub
-day1part1 : Unit -> Int64
+day1part1 : Unit -> Int
 day1part1 _ = checkWindow data
 
 pub
-day1part2 : Unit -> Int64
+day1part2 : Unit -> Int
 day1part2 _ =
-  let newdata = List.partitionStep 3L 1L data |> List.map (List.foldl (+) 0)
+  let newdata = List.partitionStep 3 1 data |> List.map (List.foldl (+) 0)
   checkWindow newdata

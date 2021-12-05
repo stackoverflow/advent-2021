@@ -1,0 +1,54 @@
+module day5
+
+import util as U
+
+typealias Coords = { x1 : Int, x2 : Int, y1 : Int, y2 : Int }
+
+parseLine : String -> Coords
+parseLine line =
+  let parsed =
+    Re.findString """(\d+),(\d+) -> (\d+),(\d+)""" line
+      |> removeFirst
+      |> List.map Int32#parseInt(_)
+  case parsed of
+    [x1, y1, x2, y2] -> {x1, x2, y1, y2}
+    _ -> todo ""
+
+data : List Coords
+data = U.readProcessTestData 5 "\\n" parseLine
+
+findDuplicates : ({ x1 : Int, x2 : Int, y1 : Int, y2 : Int } -> Boolean) -> Int
+findDuplicates filter =
+  let coords = List.filter filter data
+  let allCoords acc (points: List Coords) =
+    case points of
+      [] -> acc
+      [pp :: rest] ->
+        let updated =
+          case pp of
+            p if p.x1 == p.x2 -> (p.y1 ... p.y2) |> List.map (\y -> format "%s:%s" [p.x1, y])
+            p if p.y1 == p.y2 -> (p.x1 ... p.x2) |> List.map (\x -> format "%s:%s" [x, p.y1])
+            p ->
+              U.zip (p.x1 ... p.x2) (p.y1 ... p.y2)
+                |> List.map (\(Tuple x y) -> format "%s:%s" [x, y])
+        
+        let map =
+          Map.withLinear acc \m ->
+            List.forEach updated \key ->
+              Map.put key ((Map.get key m ?: 0) + 1) m
+            m
+        allCoords map rest
+  let solved = allCoords (Map.new []) coords
+  Map.filter (\_ v -> v > 1) solved |> Map.size |> int
+
+pub
+day5part1 : Unit -> Int
+day5part1 _ =
+  let filter {x1, x2, y1, y2} =
+    (x1 : Int) == x2 || (y1 : Int) == y2
+  findDuplicates filter
+
+pub
+day5part2 : Unit -> Int
+day5part2 _ =
+  findDuplicates (\_ -> true)

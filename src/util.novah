@@ -12,3 +12,13 @@ readProcessTestData day regex mapper =
   readTestData day
     |> String.split regex
     |> List.map mapper
+
+// add to stdlib along with zipWith
+pub
+zip : List a -> List b -> List (Tuple a b)
+zip l1 l2 =
+  let length = if List.size l1 > List.size l2 then List.size l2 else List.size l1
+  let lin = []#linear()
+  forEachRange 0 length \i ->
+    addLast ((l1 ! i) <> (l2 ! i)) lin
+  lin#forked()

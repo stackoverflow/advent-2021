@@ -2,7 +2,7 @@ module day4
 
 import util as U
 
-typealias Game = { boards : List (List (List Int)), numbers : List Int, pos : Int64 }
+typealias Game = { boards : List (List (List Int)), numbers : List Int, pos : Int }
 
 parseLines : List String -> Game
 parseLines lines =
@@ -10,32 +10,32 @@ parseLines lines =
     String.strip >> String.split "\\s+" >> List.map Int32#parseInt(_)
   let parseBoard line =
     let rows = line |> String.splitLines |> List.map parseBoardLine
-    let length = rows ! 0L |> List.size
-    let cols = 0L .. length |> List.map (\i -> List.map (_ ! i) rows)
+    let length = rows ! 0 |> List.size
+    let cols = 0 .. length |> List.map (\i -> List.map (_ ! i) rows)
     rows ++ cols
   
-  { numbers: lines ! 0L |> String.split "," |> List.map Int32#parseInt(_)
-  , boards: List.drop 1L lines |> List.map parseBoard
-  , pos: 1L
+  { numbers: lines ! 0 |> String.split "," |> List.map Int32#parseInt(_)
+  , boards: List.drop 1 lines |> List.map parseBoard
+  , pos: 1
   }
 
 data : Game
 data = U.readTestData 4 |> String.split "\\n\\n" |> parseLines
 
-won : List Int -> Int64 -> List (List Int) -> Boolean
+won : List Int -> Int -> List (List Int) -> Boolean
 won numbers pos board =
   let nums = List.take pos numbers |> Set.fromList
   let filled rowcol = Set.containsAll rowcol nums
   List.any filled board
 
-calculateScore : { pos : Int64, numbers : List Int, winner : List (List Int) | r } -> Int
+calculateScore : { pos : Int, numbers : List Int, winner : List (List Int) | r } -> Int
 calculateScore game =
   let nums = List.take game.pos game.numbers |> Set.fromList
   List.flatten game.winner
     |> List.remove (\x -> Set.contains x nums)
     |> Set.fromList
     |> Set.foldl (+) 0
-    |> _ * (game.numbers ! (game.pos - 1L))
+    |> _ * (game.numbers ! (game.pos - 1))
 
 pub
 day4part1 : Unit -> Int
@@ -43,7 +43,7 @@ day4part1 _ =
   let check game =
     case List.find (won game.numbers game.pos) game.boards of
       Some win -> { winner: win | game }
-      None -> check { .pos -> _ + 1L | game }
+      None -> check { .pos -> _ + 1 | game }
   
   check data |> calculateScore
 
@@ -52,7 +52,7 @@ day4part2 : Unit -> Int
 day4part2 _ =
   let check game =
     case List.remove (won game.numbers game.pos) game.boards of
-      [] -> { winner: game.boards ! 0L | game }
-      boards -> game |> { .pos -> _ + 1L | _ } |> { .boards = boards | _ } |> check
+      [] -> { winner: game.boards ! 0 | game }
+      boards -> game |> { .pos -> _ + 1 | _ } |> { .boards = boards | _ } |> check
   
   check data |> calculateScore
