@@ -2,33 +2,26 @@ module day6
 
 import util as U
 
-data : List Int64
-data =
+input : List Int64
+input =
   U.readProcessTestData 6 "\\n" (String.split ",")
     |> _ ! 0
     |> List.map Int64#parseLong(_)
 
 simulate : Int -> Int64
 simulate days =
-  let run daysleft list =
+  let run daysleft (list : List Int64) =
     case daysleft of
       0 -> list
       _ ->
-        let newFishes = List.find (\(Tuple day _) -> day == 0L) list |> Option.unwrap |> snd
-        let process (Tuple day fishes) =
-          case day - 1L of
-            6L -> 6L <> fishes + newFishes + 0L
-            -1L -> 8L <> fishes
-            x -> x <> fishes
-        
-        List.map process list |> run (daysleft - 1)
+        [ list ! 1, list ! 2, list ! 3, list ! 4, list ! 5, list ! 6, (list ! 7) + (list ! 0), list ! 8, list ! 0]
+          |> run (daysleft - 1)
   
-  let ndata =
-    Map.withLinear (Map.new [0L <> 0L, 1L <> 0L, 2L <> 0L, 3L <> 0L, 4L <> 0L, 5L <> 0L, 6L <> 0L, 7L <> 0L, 8L <> 0L]) \map ->
-      List.forEach data \day ->
-        Map.update day (_ + 1L) map
-  run days (Map.toList ndata)
-    |> List.foldl (\total (Tuple _ n) -> n + total) 0L
+  let data =
+    List.withLinear (List.repeat 9 0L) \list ->
+      List.forEach input \day ->
+        updateAt (int day) (_ + 1L) list
+  run days data |> List.foldl (+) 0L
 
 pub
 day6part1 : Unit -> Int64
