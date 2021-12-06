@@ -1,5 +1,6 @@
 module day6
 
+import novah.computation
 import util as U
 
 input : List Int64
@@ -10,17 +11,17 @@ input =
 
 simulate : Int -> Int64
 simulate days =
-  let run daysleft (list : List Int64) =
+  let run daysleft (data : List Int64) =
     case daysleft of
-      0 -> list
+      0 -> data
       _ ->
-        [ list ! 1, list ! 2, list ! 3, list ! 4, list ! 5, list ! 6, (list ! 7) + (list ! 0), list ! 8, list ! 0]
+        [ data ! 1, data ! 2, data ! 3, data ! 4, data ! 5, data ! 6, (data ! 7) + (data ! 0), data ! 8, data ! 0]
           |> run (daysleft - 1)
   
-  let data =
-    List.withLinear (List.repeat 9 0L) \list ->
-      List.forEach input \day ->
-        updateAt (int day) (_ + 1L) list
+  let data = do.list
+    for x in 0L ... 8L do
+      yield List.count (_ == x) input |> int64
+
   run days data |> List.foldl (+) 0L
 
 pub
