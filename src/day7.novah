@@ -7,8 +7,9 @@ input = U.readProcessTestData 7 "," String.toInt
 
 fuel : (Int -> Int) -> Int
 fuel fn =
+  let range = (List.min input ?: 0) ... (List.max input ?: 0)
   let go x = List.sumBy (\i -> Math.abs (x - i) |> fn) input
-  input |> List.minOf go |> Option.unwrap
+  range |> List.minOf go |> Option.unwrap
 
 pub
 part1 : Unit -> Int
