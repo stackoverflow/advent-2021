@@ -5,7 +5,7 @@ import util as U
 toCoord : String -> { d : Int, h : Int }
 toCoord str =
   let match = Re.findString """(\w+) (\d+)""" str
-  let amount = match ! 2 |> Int32#parseInt(_)
+  let amount = match ! 2 |> String.toInt
   case match ! 1 of
     "forward" -> { h: amount, d: 0 }
     "up" -> { h: 0, d: amount * -1 }
@@ -15,8 +15,8 @@ data : List { d : Int, h : Int }
 data = U.readProcessTestData 2 "\\n" toCoord
 
 pub
-day2part1 : Unit -> Int
-day2part1 _ =
+part1 : Unit -> Int
+part1 _ =
   let go {h: acch, d: accd} {h, d} =
     { h: acch + (h : Int)
     , d: accd + (d : Int)
@@ -25,8 +25,8 @@ day2part1 _ =
   h * d
 
 pub
-day2part2 : Unit -> Int
-day2part2 _ =
+part2 : Unit -> Int
+part2 _ =
   let go {h: acch, d: accd, a: acca} {h, d, a} =
     { h: (acch : Int) + h
     , d: accd + h * acca

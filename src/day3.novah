@@ -6,11 +6,11 @@ data : List String
 data = U.readProcessTestData 3 "\\n" identity
 
 isChar : Int -> Char -> String -> Boolean
-isChar i c (str : String) = str#charAt(i) == c
+isChar i c str = String.charAt i str == c
 
 pub
-day3part1 : Unit -> Int
-day3part1 _ =
+part1 : Unit -> Int
+part1 _ =
   let threshold = (List.size data) / 2
   let invert c = if c == '0' then '1' else '0'
   let gamma =
@@ -18,11 +18,11 @@ day3part1 _ =
       |> List.map (\i -> if i >= threshold then '1' else '0')
       |> String.fromList
   let epsilon = String.mapString invert gamma
-  Int32#parseInt(gamma, 2) * Int32#parseInt(epsilon, 2)
+  (String.toIntRadix 2 gamma) * (String.toIntRadix 2 epsilon)
 
 pub
-day3part2 : Unit -> Int
-day3part2 _ =
+part2 : Unit -> Int
+part2 _ =
   let divider ns i pred =
     let char =
       if List.count (isChar i '1') ns `pred` List.count (isChar i '0') ns then '1' else '0'
@@ -33,6 +33,6 @@ day3part2 _ =
       if List.size entries == 1 then entries else divider entries i pred
     (List.foldl go dataa (String.indices (dataa ! 0))) ! 0
 
-  let o2 = calculate data (>=) |> Int32#parseInt(_, 2)
-  let co2 = calculate data (<) |> Int32#parseInt(_, 2)
+  let o2 = calculate data (>=) |> String.toIntRadix 2
+  let co2 = calculate data (<) |> String.toIntRadix 2
   o2 * co2

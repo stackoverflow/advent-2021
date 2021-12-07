@@ -1,0 +1,19 @@
+module day7
+
+import util as U
+
+input : List Int
+input = U.readProcessTestData 7 "," String.toInt
+
+fuel : (Int -> Int) -> Int
+fuel fn =
+  let go x = List.sumBy (\i -> Math.abs (x - i) |> fn) input
+  input |> List.minOf go |> Option.unwrap
+
+pub
+part1 : Unit -> Int
+part1 _ = fuel identity
+
+pub
+part2 : Unit -> Int
+part2 _ = fuel (\x -> (x * (x + 1)) / 2)

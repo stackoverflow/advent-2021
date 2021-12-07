@@ -9,7 +9,7 @@ parseLine line =
   let parsed =
     Re.findString """(\d+),(\d+) -> (\d+),(\d+)""" line
       |> removeFirst
-      |> List.map Int32#parseInt(_)
+      |> List.map String.toInt
   case parsed of
     [x1, y1, x2, y2] -> {x1, x2, y1, y2}
     _ -> todo ""
@@ -40,13 +40,13 @@ findDuplicates filter =
   Map.filter (\_ v -> v > 1) solved |> Map.size |> int
 
 pub
-day5part1 : Unit -> Int
-day5part1 _ =
+part1 : Unit -> Int
+part1 _ =
   let filter {x1, x2, y1, y2} =
     (x1 : Int) == x2 || (y1 : Int) == y2
   findDuplicates filter
 
 pub
-day5part2 : Unit -> Int
-day5part2 _ =
+part2 : Unit -> Int
+part2 _ =
   findDuplicates (\_ -> true)

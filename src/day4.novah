@@ -7,14 +7,14 @@ typealias Game = { boards : List (List (List Int)), numbers : List Int, pos : In
 parseLines : List String -> Game
 parseLines lines =
   let parseBoardLine =
-    String.strip >> String.split "\\s+" >> List.map Int32#parseInt(_)
+    String.strip >> String.split "\\s+" >> List.map String.toInt
   let parseBoard line =
     let rows = line |> String.splitLines |> List.map parseBoardLine
     let length = rows ! 0 |> List.size
     let cols = 0 .. length |> List.map (\i -> List.map (_ ! i) rows)
     rows ++ cols
   
-  { numbers: lines ! 0 |> String.split "," |> List.map Int32#parseInt(_)
+  { numbers: lines ! 0 |> String.split "," |> List.map String.toInt
   , boards: List.drop 1 lines |> List.map parseBoard
   , pos: 1
   }
@@ -38,8 +38,8 @@ calculateScore game =
     |> _ * (game.numbers ! (game.pos - 1))
 
 pub
-day4part1 : Unit -> Int
-day4part1 _ =
+part1 : Unit -> Int
+part1 _ =
   let check game =
     case List.find (won game.numbers game.pos) game.boards of
       Some win -> { winner: win | game }
@@ -48,8 +48,8 @@ day4part1 _ =
   check data |> calculateScore
 
 pub
-day4part2 : Unit -> Int
-day4part2 _ =
+part2 : Unit -> Int
+part2 _ =
   let check game =
     case List.remove (won game.numbers game.pos) game.boards of
       [] -> { winner: game.boards ! 0 | game }

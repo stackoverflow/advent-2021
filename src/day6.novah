@@ -7,7 +7,7 @@ input : List Int64
 input =
   U.readProcessTestData 6 "\\n" (String.split ",")
     |> _ ! 0
-    |> List.map Int64#parseLong(_)
+    |> List.map String.toInt64
 
 simulate : Int -> Int64
 simulate days =
@@ -22,12 +22,12 @@ simulate days =
     for x in 0L ... 8L do
       yield List.count (_ == x) input |> int64
 
-  run days data |> List.foldl (+) 0L
+  run days data |> List.sum
 
 pub
-day6part1 : Unit -> Int64
-day6part1 _ = simulate 80
+part1 : Unit -> Int64
+part1 _ = simulate 80
 
 pub
-day6part2 : Unit -> Int64
-day6part2 _ = simulate 256
+part2 : Unit -> Int64
+part2 _ = simulate 256

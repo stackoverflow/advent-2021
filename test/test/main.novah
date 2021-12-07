@@ -6,33 +6,38 @@ import day3 as D3
 import day4 as D4
 import day5 as D5
 import day6 as D6
+import day7 as D7
 import novah.test
 
 adventTest : Unit
 adventTest =
   test "Day 1" \_ ->
-    D1.day1part1 () `shouldBe` 1754
-    D1.day1part2 () `shouldBe` 1789
+    D1.part1 () `shouldBe` 1754
+    D1.part2 () `shouldBe` 1789
   
   test "Day 2" \_ ->
-    D2.day2part1 () `shouldBe` 1250395
-    D2.day2part2 () `shouldBe` 1451210346
+    D2.part1 () `shouldBe` 1250395
+    D2.part2 () `shouldBe` 1451210346
   
   test "Day 3" \_ ->
-    D3.day3part1 () `shouldBe` 1997414
-    D3.day3part2 () `shouldBe` 1032597
+    D3.part1 () `shouldBe` 1997414
+    D3.part2 () `shouldBe` 1032597
   
   test "Day 4" \_ ->
-    D4.day4part1 () `shouldBe` 11536
-    D4.day4part2 () `shouldBe` 1284
+    D4.part1 () `shouldBe` 11536
+    D4.part2 () `shouldBe` 1284
   
   test "Day 5" \_ ->
-    D5.day5part1 () `shouldBe` 6841
-    D5.day5part2 () `shouldBe` 19258
+    D5.part1 () `shouldBe` 6841
+    D5.part2 () `shouldBe` 19258
 
   test "Day 6" \_ ->
-    D6.day6part1 () `shouldBe` 355386L
-    D6.day6part2 () `shouldBe` 1613415325809L
+    D6.part1 () `shouldBe` 355386L
+    D6.part2 () `shouldBe` 1613415325809L
+
+  test "Day 7" \_ ->
+    D7.part1 () `shouldBe` 344297
+    D7.part2 () `shouldBe` 97164301
 
 pub
 main : Array String -> Unit

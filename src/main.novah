@@ -1,9 +1,9 @@
 module main
 
-import day6 as D6
+import day7 as D7
 
 pub
 main : Array String -> Unit
 main _ =
-  println (D6.day6part1 ())
-  println (D6.day6part2 ())
+  println (D7.part1 ())
+  println (D7.part2 ())

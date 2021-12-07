@@ -3,7 +3,7 @@ module day1
 import util as U
 
 data : List Int
-data = U.readProcessTestData 1 "\\n" Int32#parseInt(_)
+data = U.readProcessTestData 1 "\\n" String.toInt
 
 checkWindow : List Int -> Int
 checkWindow list =
@@ -11,11 +11,11 @@ checkWindow list =
   0 .. (List.lastIndex list) |> List.count check
 
 pub
-day1part1 : Unit -> Int
-day1part1 _ = checkWindow data
+part1 : Unit -> Int
+part1 _ = checkWindow data
 
 pub
-day1part2 : Unit -> Int
-day1part2 _ =
-  let newdata = List.partitionStep 3 1 data |> List.map (List.foldl (+) 0)
+part2 : Unit -> Int
+part2 _ =
+  let newdata = List.partitionStep 3 1 data |> List.map List.sum
   checkWindow newdata
