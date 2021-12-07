@@ -6,13 +6,11 @@ typealias Coords = { x1 : Int, x2 : Int, y1 : Int, y2 : Int }
 
 parseLine : String -> Coords
 parseLine line =
-  let parsed =
+  let [x1, y1, x2, y2] =
     Re.findString """(\d+),(\d+) -> (\d+),(\d+)""" line
       |> removeFirst
       |> List.map String.toInt
-  case parsed of
-    [x1, y1, x2, y2] -> {x1, x2, y1, y2}
-    _ -> todo ""
+  {x1, x2, y1, y2}
 
 data : List Coords
 data = U.readProcessTestData 5 "\\n" parseLine
