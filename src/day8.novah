@@ -11,7 +11,7 @@ pub
 part1 : Unit -> Int
 part1 _ =
   let uniques str = Set.contains (String.size str) #{2, 3, 4, 7}
-  List.map (_ ! 1) input
+  List.map _.[1] input
     |> List.sumBy (List.count uniques)
 
 pub
@@ -29,7 +29,7 @@ part2 _ =
   
   let solve [ns, sol] =
     let nums = ns |> List.sortBy String.size |> List.map String.toSet
-    let baseDays = Map.new [1 <> (nums ! 0), 7 <> (nums ! 1), 4 <> (nums ! 2), 8 <> (nums ! List.lastIndex nums)]
+    let baseDays = Map.new [1 <> nums.[0], 7 <> nums.[1], 4 <> nums.[2], 8 <> nums.[-1]]
     let allDays =
       baseDays
         |> Map.put 2 (findDay baseDays nums 5 1 2 2)

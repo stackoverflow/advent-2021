@@ -10,11 +10,11 @@ parseLines lines =
     String.strip >> String.split "\\s+" >> List.map String.toInt
   let parseBoard line =
     let rows = line |> String.lines |> List.map parseBoardLine
-    let length = rows ! 0 |> List.size
-    let cols = 0 .. length |> List.map (\i -> List.map (_ ! i) rows)
+    let length = List.size rows.[0]
+    let cols = 0 .. length |> List.map (\i -> List.map _.[i] rows)
     rows ++ cols
   
-  { numbers: lines ! 0 |> String.split "," |> List.map String.toInt
+  { numbers: lines.[0] |> String.split "," |> List.map String.toInt
   , boards: List.drop 1 lines |> List.map parseBoard
   , pos: 1
   }
@@ -35,7 +35,7 @@ calculateScore game =
     |> List.remove (\x -> Set.contains x nums)
     |> Set.fromList
     |> Set.foldl (+) 0
-    |> _ * (game.numbers ! (game.pos - 1))
+    |> _ * (game.numbers.[game.pos - 1])
 
 pub
 part1 : Unit -> Int
@@ -52,7 +52,7 @@ part2 : Unit -> Int
 part2 _ =
   let check game =
     case List.remove (won game.numbers game.pos) game.boards of
-      [] -> { winner: game.boards ! 0 | game }
+      [] -> { winner: game.boards.[0] | game }
       boards -> game |> { .pos -> _ + 1 | _ } |> { .boards = boards | _ } |> check
   
   check data |> calculateScore

@@ -14,7 +14,7 @@ part1 _ =
   let threshold = (List.size data) / 2
   let invert c = if c == '0' then '1' else '0'
   let gamma =
-    List.map (\i -> List.count (isChar i '1') data) (String.indices (data ! 0))
+    List.map (\i -> List.count (isChar i '1') data) (String.indices data.[0])
       |> List.map (\i -> if i >= threshold then '1' else '0')
       |> String.fromList
   let epsilon = String.mapString invert gamma
@@ -31,7 +31,7 @@ part2 _ =
   let calculate dataa pred =
     let go entries i =
       if List.size entries == 1 then entries else divider entries i pred
-    (List.foldl go dataa (String.indices (dataa ! 0))) ! 0
+    (List.foldl go dataa (String.indices dataa.[0])).[0]
 
   let o2 = calculate data (>=) |> String.toIntRadix 2
   let co2 = calculate data (<) |> String.toIntRadix 2
