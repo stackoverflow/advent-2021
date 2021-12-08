@@ -1,5 +1,7 @@
 module util
 
+foreign import io.lacuna.bifurcan.Map
+
 pub
 readTestData : Int -> String
 readTestData day =
@@ -12,3 +14,8 @@ readProcessTestData day regex mapper =
   readTestData day
     |> String.split regex
     |> List.map mapper
+
+pub
+getUnsafe : k -> Map k v -> v
+getUnsafe k map =
+  Map.get k map |> Option.unwrap

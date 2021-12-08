@@ -9,7 +9,7 @@ parseLines lines =
   let parseBoardLine =
     String.strip >> String.split "\\s+" >> List.map String.toInt
   let parseBoard line =
-    let rows = line |> String.splitLines |> List.map parseBoardLine
+    let rows = line |> String.lines |> List.map parseBoardLine
     let length = rows ! 0 |> List.size
     let cols = 0 .. length |> List.map (\i -> List.map (_ ! i) rows)
     rows ++ cols
