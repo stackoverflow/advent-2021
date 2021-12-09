@@ -1,0 +1,43 @@
+module day9
+
+import util as U
+
+input : List (List Int)
+input = U.readProcessTestData 9 "\\n" (String.toList >> List.map (toString >> String.toInt))
+
+getOr10 : List (List Int) -> Int -> Int -> Int
+getOr10 data x y =
+  List.nth y data ? List.nth x ?: 10
+
+smallestNeighbor : List (List Int) -> Int -> Int -> Int -> Boolean
+smallestNeighbor data x y num =
+  getOr10 data (x - 1) y > num && getOr10 data (x + 1) y > num
+    && getOr10 data x (y - 1) > num && getOr10 data x (y + 1) > num
+
+pub
+part1 : Unit -> Int
+part1 _ =
+  List.mapIndexed (\y list -> List.filterIndexed (\x num -> smallestNeighbor input x y num) list) input
+    |> List.flatten |> List.sumOf (_ + 1)
+
+pub
+part2 : Unit -> Int
+part2 _ =
+  let origins =
+    List.mapIndexed (\y list -> List.mapIndexed (\x num -> if smallestNeighbor input x y num then Some (x <> y) else None) list) input
+      |> List.flatten |> List.removeNones
+  
+  let inRange (Tuple x y) = List.nth y input ? List.nth x |> Option.isSome
+  let findBasin acc = case _ of
+    [] -> Set.toList acc
+    [(Tuple x y) as index :: rest] ->
+      let v = input.[y].[x]
+      let new =
+        [x - 1 <> y, x + 1 <> y, x <> y - 1, x <> y + 1]
+          |> List.filter (\tup -> not (Set.contains tup acc))
+          |> List.filter inRange
+          |> List.filter (\(Tuple xx yy) -> input.[yy].[xx] > v && input.[yy].[xx] != 9)
+      findBasin (Set.add index acc) (rest ++ new)
+
+  let basins = List.map (\x -> findBasin #{} [x]) origins
+  basins |> List.sortBy List.size |> List.reverse |> List.take 3 |> List.foldl (\acc list -> acc * List.size list) 1
