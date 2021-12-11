@@ -1,0 +1,43 @@
+module day10
+
+foreign import io.lacuna.bifurcan.Map
+
+import util as U
+
+pairs : Map Char Char
+pairs = Map.new [')' <> '(', ']' <> '[', '}' <> '{', '>' <> '<']
+
+parse : List Char -> List Char -> Tuple (Option Char) (List Char)
+parse stack = case _ of
+  [] -> None <> stack
+  [char :: rest] -> case char of
+    x if x == '(' || x == '[' || x == '{' || x == '<' -> parse (List.push x stack) rest
+    x ->
+      let other = Map.get x pairs
+      if List.nth 0 stack == other then
+        parse (List.pop stack) rest
+      else other <> stack
+
+input : List (Tuple (Option Char) (List Char))
+input = U.readProcessTestData 10 "\\n" (String.toList >> parse [])
+
+pub
+part1 : Unit -> Int
+part1 _ =
+  let map = Map.new ['(' <> 3, '[' <> 57, '{' <> 1197, '<' <> 25137]
+  input
+    |> List.mapSome (\(Tuple invalid _) -> invalid)
+    |> List.sumOf (\c -> U.getUnsafe c map)
+
+pub
+part2 : Unit -> Int64
+part2 _ =
+  let map = Map.new ['(' <> 1L, '[' <> 2L, '{' <> 3L, '<' <> 4L]
+  let res =
+    input
+      |> List.filter (\(Tuple invalid _) -> Option.isNone invalid)
+      |> List.map (\(Tuple _ stack) ->
+        List.map (\c -> U.getUnsafe c map) stack
+          |> List.foldl (\acc n -> acc * 5L + n) 0L
+      )
+  (List.sort res).[List.size res / 2]
