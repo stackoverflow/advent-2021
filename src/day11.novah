@@ -1,0 +1,65 @@
+module day11
+
+foreign import novah.Ref
+
+import util as U
+import util (isIn)
+
+input : List (List Int)
+input = U.readProcessTestData 11 "\\n" (String.toList >> List.map (toString >> String.toInt))
+
+flashes : Ref Int
+flashes = Ref#new(0)
+
+step : List (List Int) -> List (List Int)
+step data =
+  let neighbors x y =
+    [ x - 1 <> y, x + 1 <> y, x <> y - 1, x <> y + 1
+    , x - 1 <> y - 1, x + 1 <> y - 1, x - 1 <> y + 1, x + 1 <> y + 1
+    ] |> List.filter (\(Tuple xx yy) -> xx `isIn` (0 ... 9) && yy `isIn` (0 ... 9))
+  
+  let flash octs =
+    let toFlash = []#linear()
+    U.forEachIndexed octs (\y l -> U.forEachIndexed l (\x v ->
+      if v == 10 then
+        flashes#update(_ + 1)
+        U.addAll toFlash (neighbors x y)
+        ()
+    ))
+
+    let run res = case _ of
+      [] -> res
+      [Tuple x y :: rest] ->
+        let v = res.[y].[x]
+        let newocts = updateAt y (\l -> setAt x (v + 1) l) res
+        if v == 9 then
+          flashes#update(_ + 1)
+          run newocts (rest ++ neighbors x y)
+        else run newocts rest
+
+    run octs toFlash#forked()
+  
+  let step1 = data |> List.map (List.map (_ + 1))
+  flash step1 |> List.map (\l -> List.map (\v -> if v > 9 then 0 else v) l)
+
+pub
+part1 : Unit -> Int
+part1 _ =
+  let res = atom input
+  List.forEach (1 ... 100) \_ ->
+    swap step res
+  flashes#-val
+
+pub
+part2 : Unit -> Int
+part2 _ =
+  let inSync data =
+    let x = data.[0].[0] : Int
+    List.every (\l -> List.every (_ == x) l) data
+  
+  let steps = Ref#new(0)
+  let res = atom input
+  while deref res |> inSync |> not do
+    swap step res
+    steps#update(_ + 1)
+  steps#-val

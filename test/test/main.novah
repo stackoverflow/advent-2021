@@ -10,6 +10,7 @@ import day7 as D7
 import day8 as D8
 import day9 as D9
 import day10 as D10
+import day11 as D11
 import novah.test
 
 adventTest : Unit
@@ -53,6 +54,10 @@ adventTest =
   test "Day 10" \_ ->
     D10.part1 () `shouldBe` 193275
     D10.part2 () `shouldBe` 2429644557L
+  
+  test "Day 11" \_ ->
+    D11.part1 () `shouldBe` 1613
+    D11.part2 () `shouldBe` 510
 
 pub
 main : Array String -> Unit
