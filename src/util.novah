@@ -30,21 +30,6 @@ pub
 at : String -> Int -> Char
 at = flip String.charAt
 
-// stdlib?
 pub
 isIn : {{ Equals a }} -> a -> List a -> Boolean
-isIn {{_}} x list = List.contains x list
-
-// add to stdlib
-pub
-forEachIndexed : List a -> (Int -> a -> b) -> Unit
-forEachIndexed list fun =
-  forEachRange 0 (List.size list) \i -> fun i list.[i]
-
-// add to stdlib
-pub
-concat : List (List a) -> List a
-concat lists =
-  List.foldl (\acc list -> acc ++ list) [] lists
-
-// add to stdlib Set.maxOr, Set.maxOf
+isIn = List.contains

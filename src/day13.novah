@@ -37,8 +37,8 @@ fold axis where coords =
 
 plot : Set (Tuple Int Int) -> Unit
 plot (coords: Set (Tuple Int Int)) =
-  let maxX = Set.map fst coords |> Set.max |> Option.unwrap
-  let maxY = Set.map snd coords |> Set.max |> Option.unwrap
+  let maxX = Set.maxOf fst coords |> Option.unwrap
+  let maxY = Set.maxOf snd coords |> Option.unwrap
   let yy = atom 0
   List.forEach (0 ... maxY) \y ->
     List.forEach (0 ... maxX) \x ->

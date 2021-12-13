@@ -20,7 +20,7 @@ step data =
   
   let flash octs =
     let toFlash = []#linear()
-    U.forEachIndexed octs (\y l -> U.forEachIndexed l (\x v ->
+    List.forEachIndexed octs (\y l -> List.forEachIndexed l (\x v ->
       if v == 10 then
         flashes#update(_ + 1)
         U.addAll toFlash (neighbors x y)
