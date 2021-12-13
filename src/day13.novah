@@ -1,0 +1,64 @@
+module day13
+
+import util (readTestData)
+
+parse : String -> { coords : Set (Tuple Int Int), folds : List (Tuple String Int) }
+parse str =
+  let [cs, fs] = String.split "\\n\\n" str
+  let coords =
+    String.lines cs |> List.map (\coord ->
+      String.split "," coord |> (\[x, y] -> String.toInt x <> String.toInt y)
+    ) |> Set.fromList
+  let folds = String.lines fs |> List.map (\foldd ->
+    let [_, axis, where] = Re.findString """fold along (\w)=(\d+)""" foldd
+    axis <> String.toInt where
+  )
+  {coords, folds}
+
+input : { coords : Set (Tuple Int Int), folds : List (Tuple String Int) }
+input = readTestData 13 |> parse
+
+fold : String -> Int -> Set (Tuple Int Int) -> Set (Tuple Int Int)
+fold axis where coords =
+  if axis == "x" then
+    coords |> Set.filter (\(Tuple x _) -> (x: Int) != where) |> Set.map (\(Tuple x y) ->
+      if x >= where then
+        let newx = Math.abs ((x - where) - where)
+        newx <> y
+      else x <> y
+    )
+  else
+    coords |> Set.filter (\(Tuple _ y) -> (y: Int) != where) |> Set.map (\(Tuple x y) ->
+      if y >= where then
+        let newy = Math.abs ((y - where) - where)
+        x <> newy
+      else x <> y
+    )
+
+plot : Set (Tuple Int Int) -> Unit
+plot (coords: Set (Tuple Int Int)) =
+  let maxX = Set.map fst coords |> Set.max |> Option.unwrap
+  let maxY = Set.map snd coords |> Set.max |> Option.unwrap
+  let yy = atom 0
+  List.forEach (0 ... maxY) \y ->
+    List.forEach (0 ... maxX) \x ->
+      if y > (deref yy) then
+        println ""
+        reset y yy
+        ()
+      print if Set.contains (x <> y) coords then "#" else "."
+
+pub
+part1 : Unit -> Int
+part1 _ =
+  let (Tuple axis where) = input.folds.[0]
+  fold axis where input.coords |> Set.size
+
+pub
+part2 : Unit -> Int
+part2 _ =
+  let coords = atom input.coords
+  List.forEach input.folds \(Tuple axis where) ->
+    swap (fold axis where) coords
+  plot (deref coords)
+  Set.size (deref coords)
