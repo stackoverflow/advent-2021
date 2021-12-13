@@ -1,0 +1,38 @@
+module day12
+
+import util (at, readProcessTestData)
+
+input : List (List String)
+input = readProcessTestData 12 "\\n" (String.split "-")
+
+findPaths : List String -> (List String -> String -> Boolean) -> String -> List (List String)
+findPaths acc allow path =
+  let newacc = addLast path acc
+  if path == "end" then
+    [newacc]
+  else
+    let filter from to = from == path && allow newacc to
+    let follows1 = List.filter (\[from, to] -> filter from to) input |> List.map (\[_, it] -> it)
+    let follows2 = List.filter (\[from, to] -> filter to from ) input |> List.map (\[it, _] -> it)
+    let follows = follows1 ++ follows2
+
+    List.flatMap (findPaths newacc allow) follows
+
+pub
+part1 : Unit -> Int
+part1 _ =
+  let allow acc value =
+    Char#isUpperCase(value `at` 0) || value == "end" || not (List.contains value acc)
+  
+  findPaths [] allow "start" |> List.size
+
+pub
+part2 : Unit -> Int
+part2 _ =
+  let allow acc value =
+    let lowers = List.filter (\v -> Char#isLowerCase(v `at` 0) && v != "start" && v != "end") acc
+    let dups = List.size lowers > (Set.fromList lowers |> Set.size)
+    let should = if dups then not (List.contains value acc) else (List.filter (_ == value) acc |> List.size) < 2
+    value != "start" && (Char#isUpperCase(value `at` 0) || value == "end" || should)
+  
+  findPaths [] allow "start" |> List.size
