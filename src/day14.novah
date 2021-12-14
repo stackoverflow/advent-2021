@@ -1,0 +1,65 @@
+module day14
+
+foreign import io.lacuna.bifurcan.Map
+
+import util (readTestData, associate, at, getUnsafe)
+
+increment : k -> Int64 -> Map k Int64 -> Map k Int64
+increment key amount map =
+  let v = Map.get key map
+  Map.put key (Option.maybe amount (_ + amount) v) map
+
+mapTemplate : List String -> Map String Int64
+mapTemplate (list : List String) =
+  Map.withLinear (Map.new []) \map ->
+    List.forEach (0 .. List.lastIndex list) \i ->
+      increment (list.[i] ++ list.[i + 1]) 1L map
+
+input : { rules : Map String String, template : Map String Int64 }
+input =
+  readTestData 14 |> String.split "\\n\\n" |> (\[start, rules] ->
+    let template = String.toList start |> List.map toString |> mapTemplate
+    let assoc str = String.split " -> " str |> \[k, v] -> k <> v
+    {template, rules: String.lines rules |> associate assoc}
+  )
+
+step : Map String String -> Map String Int64 -> Map String Int64
+step rules vals =
+  Map.withLinear (Map.new []) \map ->
+    Map.forEach vals \pair count ->
+      let k1 = pair `at` 0 |> toString
+      let k2 = pair `at` 1 |> toString
+      let v = getUnsafe pair rules
+      increment (k1 ++ v) count map
+      increment (v ++ k2) count map
+      ()
+
+countElements : Map String Int64 -> Map String Int64
+countElements vals =
+  let newmap =
+    Map.withLinear (Map.new []) \map ->
+      Map.forEach vals \pair count ->
+        let k1 = pair `at` 0 |> toString
+        let k2 = pair `at` 1 |> toString
+        increment k1 count map
+        increment k2 count map
+        ()
+  let mapper v = if Math.isOdd v then (v + 1L) / 2L else v / 2L
+  Map.mapValues (\_ v -> mapper v) newmap
+
+runSteps : Int -> Int64
+runSteps amount =
+  let map = atom input.template
+  forEachRange 0 amount \_ ->
+    swap (step input.rules) map
+  let count = countElements (deref map)
+  let res = Map.toList count |> List.map snd |> List.sort
+  res.[-1] - res.[0]
+
+pub
+part1 : Unit -> Int64
+part1 _ = runSteps 10
+
+pub
+part2 : Unit -> Int64
+part2 _ = runSteps 40
