@@ -1,0 +1,64 @@
+module day17
+
+foreign import novah.Ref
+
+import util (readTestData)
+
+typealias Probe = { x : Int, y : Int, vx : Int, vy : Int, highest : Int, hit : Boolean }
+
+parseInput : String -> { x : Range Int, y : Range Int }
+parseInput data =
+  let [_, x1, x2, y1, y2] = Re.findString """target area: x=([+|-]?\d+)\.\.([+|-]?\d+), y=([+|-]?\d+)\.\.([+|-]?\d+)""" data
+  {x: String.toInt x1 .> String.toInt x2, y: String.toInt y1 .> String.toInt y2 }
+
+input : { x : Range Int, y : Range Int }
+input = readTestData 17 |> parseInput
+
+probe : Int -> Int -> Probe
+probe vx vy= { vx, vy, x: 0, y: 0, hit: false, highest: 0 }
+
+step : { x : Range Int, y : Range Int } -> Probe -> Probe
+step target p =
+  let vx = case p of
+    pp if pp.vx > 0 -> pp.vx - 1
+    pp if pp.vx < 0 -> pp.vx + 1
+    _ -> 0
+  let x = p.x + p.vx
+  let y = p.y + p.vy
+  let highest = Math.max y p.highest
+  let hit = x `inRange` target.x && y `inRange` target.y
+  { x, y, vx, vy: p.vy - 1, highest, hit }
+
+runSteps : Probe -> { x : Range Int, y : Range Int } -> Probe
+runSteps p target =
+  let pro = Ref#new(p)
+  let bottom = Math.min (rangeStart target.y) (rangeEnd target.y)
+  while not pro#-val.hit && pro#-val.y > bottom do
+    pro#update(step target)
+  pro#-val
+
+pub
+part1 : Unit -> Int
+part1 _ =
+  let highest = atom 0
+  List.forEach (1 ... 300) \y ->
+    let p = runSteps (probe 6 y) input
+    if p.hit && (deref highest) < p.highest then
+      reset p.highest highest
+      ()
+  deref highest
+
+pub
+part2 : Unit -> Int
+part2 _ =
+  let total = Ref#new(0)
+  let bigX = Math.max (rangeStart input.x) (rangeEnd input.x) + 1
+  let smallY = Math.min (rangeStart input.y) (rangeEnd input.y)
+
+  List.forEach (5 ... bigX) \x ->
+    List.forEach (smallY ... 267) \y ->
+      let p = runSteps (probe x y) input
+      if p.hit then
+        total#update(_ + 1)
+        ()
+  total#-val

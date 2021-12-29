@@ -29,7 +29,7 @@ part2 _ =
     List.mapIndexed (\y list -> List.mapIndexed (\x num -> if lowestNeighbor input x y num then Some (x <> y) else None) list) input
       |> List.flatten |> List.removeNones
   
-  let inRange (Tuple x y) = List.nth y input ? List.nth x |> Option.isSome
+  let contains (Tuple x y) = List.nth y input ? List.nth x |> Option.isSome
   let findBasin acc = case _ of
     [] -> Set.toList acc
     [(Tuple x y) as index :: rest] ->
@@ -37,7 +37,7 @@ part2 _ =
       let new =
         [x - 1 <> y, x + 1 <> y, x <> y - 1, x <> y + 1]
           |> List.filter (\tup -> not (Set.contains tup acc))
-          |> List.filter inRange
+          |> List.filter contains
           |> List.filter (\(Tuple xx yy) -> input.[yy].[xx] > v && input.[yy].[xx] != 9)
       findBasin (Set.add index acc) (rest ++ new)
 
