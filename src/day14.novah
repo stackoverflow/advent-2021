@@ -1,8 +1,6 @@
 module day14
 
-foreign import io.lacuna.bifurcan.Map
-
-import util (readTestData, associate, at, getUnsafe)
+import util (readTestData, at, getUnsafe)
 
 increment : k -> Int64 -> Map k Int64 -> Map k Int64
 increment key amount map =
@@ -20,7 +18,7 @@ input =
   readTestData 14 |> String.split "\\n\\n" |> (\[start, rules] ->
     let template = String.toList start |> List.map toString |> mapTemplate
     let assoc str = String.split " -> " str |> \[k, v] -> k <> v
-    {template, rules: String.lines rules |> associate assoc}
+    {template, rules: String.lines rules |> Map.associate assoc}
   )
 
 step : Map String String -> Map String Int64 -> Map String Int64

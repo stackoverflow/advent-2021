@@ -1,7 +1,5 @@
 module util
 
-foreign import io.lacuna.bifurcan.Map
-
 pub
 readTestData : Int -> String
 readTestData day =
@@ -33,8 +31,3 @@ at = flip String.charAt
 pub
 isIn : {{ Equals a }} -> a -> List a -> Boolean
 isIn = List.contains
-
-// add to stdlib (list)
-pub
-associate : (a -> Tuple k v) -> List a -> Map k v
-associate fun = List.map fun >> Map.new

@@ -1,7 +1,5 @@
 module day10
 
-foreign import io.lacuna.bifurcan.Map
-
 import util as U
 
 pairs : Map Char Char

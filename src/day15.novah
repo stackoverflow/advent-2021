@@ -1,0 +1,77 @@
+module day15
+
+foreign import java.util.Comparator
+foreign import java.util.PriorityQueue
+foreign import novah.Ref
+
+import util (readTestData, getUnsafe, addAll)
+
+type Vertex = Vertex Int Int Int
+
+type Pair = Pair Int Vertex
+
+input : List Vertex
+input =
+  readTestData 15
+    |> String.lines
+    |> List.mapIndexed (\y line ->
+      String.toList line |> List.mapIndexed (\x v ->
+        Vertex x y (toString v |> String.toInt)
+      )
+    ) |> List.flatten
+
+aStar : Vertex -> (Vertex -> Int32) -> (Vertex -> List Vertex) -> Int
+aStar start hFunc neighbors =
+  let comp = Java.toComparator \(Pair x _) (Pair y _) -> compare x y
+  let q = PriorityQueue#new(comp as Comparator Object) : PriorityQueue Pair
+  q#add(Pair (hFunc start) start)
+
+  let pathCost = (Map.new [start <> 0])#linear() : Map Vertex Int
+  let res = Ref#new(-1)
+
+  while res#-val < 0 || q#size() != 0 do
+    let (Pair _ s) = q#poll()
+    if hFunc s == 0 then res#-val <- getUnsafe s pathCost
+
+    List.forEach (neighbors s) \(Vertex _ _ v) as s2 ->
+      let g = getUnsafe s pathCost + v
+      if not (Map.hasKey s2 pathCost) || g < (getUnsafe s2 pathCost) then
+        q#add(Pair (g + hFunc s2) s2)
+        Map.put s2 g pathCost
+        ()
+  res#-val
+
+makeGrid : List Vertex -> Map (Tuple Int Int) Vertex
+makeGrid data =
+  Map.withLinear (Map.new []) \m ->
+    List.forEach data \(Vertex x y _) as v ->
+      Map.put (x <> y) v m
+
+aStarSearch : List Vertex -> Vertex -> Int
+aStarSearch data start =
+  let (Vertex gx gy _) = data.[-1]
+  let grid = makeGrid data
+  let neighbors (Vertex x y _) =
+    [x - 1 <> y, x + 1 <> y, x <> y - 1, x <> y + 1] |> List.mapSome (\tup -> Map.get tup grid)
+  let hFunc (Vertex x y _) = Math.abs (gx - x) + Math.abs (gy - y)
+  aStar start hFunc neighbors
+
+pub
+part1 : Unit -> Int
+part1 _ = aStarSearch input input.[0]
+
+pub
+part2 : Unit -> Int
+part2 _ =
+  let newInput = input#linear()
+  let (Vertex lastx _ _) = input.[-1]
+  let size = lastx + 1
+  List.forEach (0 ... 4) \y ->
+    List.forEach (0 ... 4) \x ->
+      if x != 0 || y != 0 then
+        let toAdd =
+          input |> List.map \(Vertex vx vy vv) ->
+            let newV = vv + x + y
+            Vertex (vx + x * size) (vy + y * size) (if newV < 10 then newV else (newV % 10) + 1)
+        addAll newInput toAdd
+  aStarSearch newInput input.[0]
