@@ -1,0 +1,86 @@
+module day16
+
+import util (readTestData, at)
+
+type Packet
+  = Literal { version : Int64, typ : Int64, num : Int64 }
+  | Op { version : Int64, typ : Int64, packets : List Packet }
+
+toInt2 : String -> Int64
+toInt2 = String.toInt64Radix 2
+
+parseBits : Int -> String -> Tuple Int64 String
+parseBits amount bits = toInt2 (String.take amount bits) <> String.drop amount bits
+
+parseNum : String -> String -> Tuple Int64 String
+parseNum acc bits =
+  let partial = acc ++ (String.substring 1 5 bits)
+  if bits `at` 0 == '1' then
+    parseNum partial (String.drop 5 bits)
+  else
+    toInt2 partial <> (String.drop 5 bits)
+
+parseOp : String -> Tuple (List Packet) String
+parseOp bits =
+  let parseWhile acc = case _ of
+    "" -> acc
+    bitss ->
+      let (Tuple pack rest) = parsePacket bitss
+      parseWhile (addLast pack acc) rest
+  
+  let parseUntil acc bitss = case _ of
+    0L -> acc <> bitss
+    i ->
+      let (Tuple pack rest) = parsePacket bitss
+      parseUntil (addLast pack acc) rest (i - 1L)
+  let (Tuple i rest) = parseBits 1 bits
+  if i == 0L then // size packet
+    let (Tuple length rest2) = parseBits 15 rest
+    let (Tuple packetBits restBits) = String.take (int length) rest2 <> String.drop (int length) rest2
+    parseWhile [] packetBits <> restBits
+  else // number of packets
+    let (Tuple total rest2) = parseBits 11 rest
+    parseUntil [] rest2 total
+
+parsePacket : String -> Tuple Packet String
+parsePacket bits =
+  let (Tuple version rest) = parseBits 3 bits
+  let (Tuple typ rest2) = parseBits 3 rest
+  if typ == 4L then
+    let (Tuple num restBits) = parseNum "" rest2
+    Literal { version, typ, num} <> restBits
+  else
+    let (Tuple packets restBits) = parseOp rest2
+    Op { version, typ, packets} <> restBits
+
+input : Packet
+input =
+  readTestData 16
+    |> String.toList |> List.map (\b ->
+      let num = toString b |> String.toIntRadix 16 |> Int32#toBinaryString(_)
+      format "%4s" [num] |> String.replaceChar ' ' '0'
+    ) |> String.join "" |> parsePacket |> fst
+
+pub
+part1 : Unit -> Int64
+part1 _ =
+  let count = case _ of
+    Literal l -> l.version
+    Op op -> op.version + List.sumOf count op.packets
+  count input
+
+pub
+part2 : Unit -> Int64
+part2 _ =
+  let parse = case _ of
+    Literal l -> l.num
+    Op op -> case op.typ of
+      0L -> List.sumOf parse op.packets
+      1L -> List.foldl (\acc packet -> acc * parse packet) 1L op.packets
+      2L -> List.minOf parse op.packets |> Option.unwrap
+      3L -> List.maxOf parse op.packets |> Option.unwrap
+      5L -> if parse op.packets.[0] > parse op.packets.[1] then 1L else 0L
+      6L -> if parse op.packets.[0] < parse op.packets.[1] then 1L else 0L
+      7L -> if parse op.packets.[0] == parse op.packets.[1] then 1L else 0L
+      _ -> todo "cannot happen"
+  parse input
