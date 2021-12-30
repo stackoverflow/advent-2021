@@ -1,0 +1,98 @@
+module day18
+
+import util (at, readProcessTestData)
+
+type SnailNumber
+  = Regular Int Int
+  | Pair SnailNumber SnailNumber Int
+
+instance
+snailEquals : Equals SnailNumber
+snailEquals = Equals Java.equals
+
+parseNumber : Int -> String -> Tuple SnailNumber String
+parseNumber depth num = case num `at` 0 of
+  '[' ->
+    let (Tuple n1 line) = parseNumber (depth + 1) (String.drop 1 num)
+    let (Tuple n2 line2) = parseNumber (depth + 1) (String.drop 1 line)
+    Pair n1 n2 depth <> String.drop 1 line2
+  ',' -> parseNumber depth (String.drop 1 num)
+  char ->
+    let n = char |> toString |> String.toInt
+    Regular n depth <> String.drop 1 num
+
+input : List SnailNumber
+input = readProcessTestData 18 "\\n" (parseNumber 0 >> fst)
+
+splitDown : Int -> Int
+splitDown (num : Int) = (Math.floor (num#doubleValue() / 2.0))#intValue()
+
+splitUp : Int -> Int
+splitUp (num : Int) = (Math.ceil (num#doubleValue() / 2.0))#intValue()
+
+tryAddLeft : Int -> SnailNumber -> SnailNumber
+tryAddLeft num = case _ of
+  Regular n depth -> Regular (n + num) depth
+  Pair n1 n2 depth -> Pair (tryAddLeft num n1) n2 depth
+
+tryAddRight : Int -> SnailNumber -> SnailNumber
+tryAddRight num = case _ of
+  Regular n depth -> Regular (n + num) depth
+  Pair n1 n2 depth -> Pair n1 (tryAddRight num n2) depth
+
+explodeIfNeeded : SnailNumber -> { exploded : Boolean, left : Int, n : SnailNumber, right : Int }
+explodeIfNeeded = case _ of
+  (Regular _ _) as snum -> { exploded: false, n: snum, left: 0, right: 0}
+  Pair (Regular r1 _) (Regular r2 _) 4 -> { exploded: true, n: Regular 0 4, left: r1, right: r2}
+  (Pair n1 n2 depth) as snum ->
+    let {exploded, n, left, right} = explodeIfNeeded n1
+    if exploded then { exploded: true, n: Pair n (tryAddLeft right n2) depth, left, right: 0 }
+    else
+      let {exploded: exploded2, n: rightnum, left: left2, right: right2} = explodeIfNeeded n2
+      if exploded2 then { exploded: true, n: Pair (tryAddRight left2 n1) rightnum depth, left: 0, right: right2 }
+      else { exploded: false, n: snum, left: 0, right: 0 }
+
+splitIfNeeded : SnailNumber -> Tuple Boolean SnailNumber
+splitIfNeeded = case _ of
+  Regular n depth if n >= 10 -> true <> Pair (Regular (splitDown n) (depth + 1)) (Regular (splitUp n) (depth + 1)) depth
+  (Regular _ _) as n -> false <> n
+  (Pair n1 n2 depth) as n ->
+    let (Tuple split splitnum) = splitIfNeeded n1
+    if split then true <> Pair splitnum n2 depth
+    else
+      let (Tuple split2 splitnum2) = splitIfNeeded n2
+      if split2 then true <> Pair n1 splitnum2 depth
+      else false <> n
+
+reduce : SnailNumber -> SnailNumber
+reduce snum =
+  let {exploded, n} = explodeIfNeeded snum
+  if exploded then reduce n
+  else
+    let (Tuple split sn) = splitIfNeeded snum
+    if split then reduce sn
+    else snum
+
+increaseDepth : SnailNumber -> SnailNumber
+increaseDepth = case _ of
+  Regular n depth -> Regular n (depth + 1)
+  Pair n1 n2 depth -> Pair (increaseDepth n1) (increaseDepth n2) (depth + 1)
+
+magnitude : SnailNumber -> Int
+magnitude = case _ of
+  Regular n _ -> n
+  Pair n1 n2 _ -> 3 * magnitude n1 + 2 * magnitude n2
+
+add : SnailNumber -> SnailNumber -> SnailNumber
+add s1 s2 = Pair (increaseDepth s1) (increaseDepth s2) 0
+
+pub
+part1 : Unit -> Int
+part1 _ =
+  input |> List.reduce (\acc snum -> reduce (add acc snum)) |> Option.unwrap |> magnitude
+
+pub
+part2 : Unit -> Int
+part2 _ =
+  let pairs = input |> List.flatMap (\snum -> input |> List.filter (_ != snum) |> List.map (_ <> snum))
+  pairs |> List.map (\(Tuple s1 s2) -> reduce (add s1 s2)) |> List.maxOf magnitude |> Option.unwrap
