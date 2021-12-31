@@ -46,6 +46,7 @@ makeGrid data =
   Map.withLinear (Map.new []) \m ->
     List.forEach data \(Vertex x y _) as v ->
       Map.put (x <> y) v m
+      ()
 
 aStarSearch : List Vertex -> Vertex -> Int
 aStarSearch data start =

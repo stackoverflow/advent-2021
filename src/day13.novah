@@ -60,5 +60,6 @@ part2 _ =
   let coords = atom input.coords
   List.forEach input.folds \(Tuple axis where) ->
     swap (fold axis where) coords
+    ()
   plot (deref coords)
   Set.size (deref coords)

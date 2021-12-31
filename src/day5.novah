@@ -32,6 +32,7 @@ findDuplicates filter =
           Map.withLinear acc \m ->
             List.forEach updated \key ->
               Map.put key ((Map.get key m ?: 0) + 1) m
+              ()
             m
         allCoords map rest
   let solved = allCoords (Map.new []) coords
