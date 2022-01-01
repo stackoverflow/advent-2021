@@ -32,3 +32,11 @@ at = flip String.charAt
 pub
 isIn : {{ Equals a }} -> a -> List a -> Boolean
 isIn = List.contains
+
+pub
+min : {{ NumberOps a }} -> List a -> a
+min {{_}} list = List.min list |> Option.unwrap
+
+pub
+max : {{ NumberOps a }} -> List a -> a
+max {{_}} list = List.max list |> Option.unwrap

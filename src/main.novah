@@ -1,6 +1,6 @@
 module main
 
-import day20 as D
+import day21 as D
 
 pub
 main : Array String -> Unit
