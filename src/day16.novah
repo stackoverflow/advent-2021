@@ -1,13 +1,10 @@
 module day16
 
-import util (readTestData, at)
+import util (readTestData, at, zeroPad, min, max, getUnsafe, toInt2)
 
 type Packet
   = Literal { version : Int64, typ : Int64, num : Int64 }
   | Op { version : Int64, typ : Int64, packets : List Packet }
-
-toInt2 : String -> Int64
-toInt2 = String.toInt64Radix 2
 
 parseBits : Int -> String -> Tuple Int64 String
 parseBits amount bits = toInt2 (String.take amount bits) <> String.drop amount bits
@@ -22,25 +19,20 @@ parseNum acc bits =
 
 parseOp : String -> Tuple (List Packet) String
 parseOp bits =
-  let parseWhile acc = case _ of
-    "" -> acc
-    bitss ->
+  let parseUntil acc bitss stop =
+    if stop acc bitss then acc <> bitss
+    else
       let (Tuple pack rest) = parsePacket bitss
-      parseWhile (addLast pack acc) rest
-  
-  let parseUntil acc bitss = case _ of
-    0L -> acc <> bitss
-    i ->
-      let (Tuple pack rest) = parsePacket bitss
-      parseUntil (addLast pack acc) rest (i - 1L)
+      parseUntil (addLast pack acc) rest stop
+
   let (Tuple i rest) = parseBits 1 bits
   if i == 0L then // size packet
     let (Tuple length rest2) = parseBits 15 rest
     let (Tuple packetBits restBits) = String.take (int length) rest2 <> String.drop (int length) rest2
-    parseWhile [] packetBits <> restBits
+    fst (parseUntil [] packetBits (\_ bs -> String.isEmpty bs)) <> restBits
   else // number of packets
     let (Tuple total rest2) = parseBits 11 rest
-    parseUntil [] rest2 total
+    parseUntil [] rest2 (\acc _ -> List.size acc == int total)
 
 parsePacket : String -> Tuple Packet String
 parsePacket bits =
@@ -56,9 +48,8 @@ parsePacket bits =
 input : Packet
 input =
   readTestData 16
-    |> String.toList |> List.map (\b ->
-      let num = toString b |> String.toIntRadix 16 |> Int32#toBinaryString(_)
-      format "%4s" [num] |> String.replaceChar ' ' '0'
+    |> String.toList |> List.map (
+      toString >> String.toIntRadix 16 >> Int32#toBinaryString(_) >> zeroPad 4
     ) |> String.join "" |> parsePacket |> fst
 
 pub
@@ -72,15 +63,13 @@ part1 _ =
 pub
 part2 : Unit -> Int64
 part2 _ =
+  let comp fun [x, y] = if x `fun` y then 1L else 0L
+  let ops =
+    Map.new [0L <> List.sum, 1L <> List.product, 2L <> min, 3L <> max, 5L <> comp (>), 6L <> comp (<), 7L <> comp (==)]
+
   let parse = case _ of
     Literal l -> l.num
-    Op op -> case op.typ of
-      0L -> List.sumOf parse op.packets
-      1L -> List.foldl (\acc packet -> acc * parse packet) 1L op.packets
-      2L -> List.minOf parse op.packets |> Option.unwrap
-      3L -> List.maxOf parse op.packets |> Option.unwrap
-      5L -> if parse op.packets.[0] > parse op.packets.[1] then 1L else 0L
-      6L -> if parse op.packets.[0] < parse op.packets.[1] then 1L else 0L
-      7L -> if parse op.packets.[0] == parse op.packets.[1] then 1L else 0L
-      _ -> todo "cannot happen"
+    Op op ->
+      let vals = List.map parse op.packets
+      (getUnsafe op.typ ops) vals
   parse input

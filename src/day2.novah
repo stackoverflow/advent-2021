@@ -4,7 +4,7 @@ import util as U
 
 toCoord : String -> { d : Int, h : Int }
 toCoord str =
-  let match = Re.findString """(\w+) (\d+)""" str
+  let match = Re.find #"(\w+) (\d+)" str
   let amount = String.toInt match.[2]
   case match.[1] of
     "forward" -> { h: amount, d: 0 }

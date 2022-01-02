@@ -8,7 +8,7 @@ typealias Probe = { x : Int, y : Int, vx : Int, vy : Int, highest : Int, hit : B
 
 parseInput : String -> { x : Range Int, y : Range Int }
 parseInput data =
-  let [_, x1, x2, y1, y2] = Re.findString """target area: x=([+|-]?\d+)\.\.([+|-]?\d+), y=([+|-]?\d+)\.\.([+|-]?\d+)""" data
+  let [_, x1, x2, y1, y2] = Re.find #"target area: x=([+|-]?\d+)\.\.([+|-]?\d+), y=([+|-]?\d+)\.\.([+|-]?\d+)" data
   {x: String.toInt x1 .> String.toInt x2, y: String.toInt y1 .> String.toInt y2 }
 
 input : { x : Range Int, y : Range Int }

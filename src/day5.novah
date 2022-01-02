@@ -7,7 +7,7 @@ typealias Coords = { x1 : Int, x2 : Int, y1 : Int, y2 : Int }
 parseLine : String -> Coords
 parseLine line =
   let [x1, y1, x2, y2] =
-    Re.findString """(\d+),(\d+) -> (\d+),(\d+)""" line
+    Re.find #"(\d+),(\d+) -> (\d+),(\d+)" line
       |> removeFirst
       |> List.map String.toInt
   {x1, x2, y1, y2}

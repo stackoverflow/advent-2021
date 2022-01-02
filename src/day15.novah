@@ -4,7 +4,7 @@ foreign import java.util.Comparator
 foreign import java.util.PriorityQueue
 foreign import novah.Ref
 
-import util (readTestData, getUnsafe, addAll)
+import util (readTestData, getUnsafe, addAll, linear)
 
 type Vertex = Vertex Int Int Int
 
@@ -64,7 +64,7 @@ part1 _ = aStarSearch input input.[0]
 pub
 part2 : Unit -> Int
 part2 _ =
-  let newInput = input#linear()
+  let newInput = linear input
   let (Vertex lastx _ _) = input.[-1]
   let size = lastx + 1
   List.forEach (0 ... 4) \y ->

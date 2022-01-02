@@ -2,11 +2,10 @@ module day11
 
 foreign import novah.Ref
 
-import util as U
-import util (isIn)
+import util (addAll, isIn, linear, forked, readProcessTestData)
 
 input : List (List Int)
-input = U.readProcessTestData 11 "\\n" (String.toList >> List.map (toString >> String.toInt))
+input = readProcessTestData 11 "\\n" (String.toList >> List.map (toString >> String.toInt))
 
 flashes : Ref Int
 flashes = Ref#new(0)
@@ -19,11 +18,11 @@ step data =
     ] |> List.filter (\(Tuple xx yy) -> xx `isIn` (0 ... 9) && yy `isIn` (0 ... 9))
   
   let flash octs =
-    let toFlash = []#linear()
+    let toFlash = linear []
     List.forEachIndexed octs (\y l -> List.forEachIndexed l (\x v ->
       if v == 10 then
         flashes#update(_ + 1)
-        U.addAll toFlash (neighbors x y)
+        addAll toFlash (neighbors x y)
         ()
     ))
 
@@ -37,7 +36,7 @@ step data =
           run newocts (rest ++ neighbors x y)
         else run newocts rest
 
-    run octs toFlash#forked()
+    run octs (forked toFlash)
   
   let step1 = data |> List.map (List.map (_ + 1))
   flash step1 |> List.map (\l -> List.map (\v -> if v > 9 then 0 else v) l)

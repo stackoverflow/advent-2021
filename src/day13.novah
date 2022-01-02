@@ -10,7 +10,7 @@ parse str =
       String.split "," coord |> (\[x, y] -> String.toInt x <> String.toInt y)
     ) |> Set.fromList
   let folds = String.lines fs |> List.map (\foldd ->
-    let [_, axis, where] = Re.findString """fold along (\w)=(\d+)""" foldd
+    let [_, axis, where] = Re.find #"fold along (\w)=(\d+)" foldd
     axis <> String.toInt where
   )
   {coords, folds}

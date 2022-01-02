@@ -40,3 +40,21 @@ min {{_}} list = List.min list |> Option.unwrap
 pub
 max : {{ NumberOps a }} -> List a -> a
 max {{_}} list = List.max list |> Option.unwrap
+
+pub
+linear : List a -> List a
+linear (list : List a) = list#linear()
+
+pub
+forked : List a -> List a
+forked (list : List a) = list#forked()
+
+pub
+toInt2 : String -> Int64
+toInt2 = String.toInt64Radix 2
+
+pub
+zeroPad : Int -> String -> String
+zeroPad amount str =
+  if String.size str >= amount then str
+  else zeroPad amount ("0" ++ str)
