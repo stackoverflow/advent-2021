@@ -6,19 +6,16 @@ input : List String
 input = readProcessTestData 25 "\n" identity
 
 transpose : List String -> List String
-transpose list =
-  let res = List.repeat (String.size list.[0]) (List.repeat (List.size list) '.')
-  res |> List.mapIndexed (\i str ->
-    List.mapIndexed (\j _ -> list.[j] `at` i) str
-  ) |> List.map String.fromList
+transpose =
+  List.map String.toList >> List.zipAll >> List.map String.fromList
 
 pub
 part1 : Unit -> Int
 part1 _ =
   let move matrix char =
-    matrix |> List.map (\str ->
-      let res = String.replace (format "%s." [char]) (format ".%s" [char]) str
-      if str `at` 0 == '.' && str `at` (String.size str - 1) == char then
+    matrix |> List.map (\line ->
+      let res = line |> String.replace (format "%s." [char]) (format ".%s" [char])
+      if line `at` 0 == '.' && line `at` -1 == char then
         toString char ++ String.substring 1 (String.lastIndex res) res ++ "."
       else res
     )
