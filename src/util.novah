@@ -27,7 +27,9 @@ addAll list toAdd =
 
 pub
 at : String -> Int -> Char
-at = flip String.charAt
+at str idx =
+  let i = if idx >= 0 then idx else String.size str + idx
+  String.charAt i str
 
 pub
 isIn : {{ Equals a }} -> a -> List a -> Boolean

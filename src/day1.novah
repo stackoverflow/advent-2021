@@ -1,9 +1,9 @@
 module day1
 
-import util as U
+import util (readProcessTestData)
 
 data : List Int
-data = U.readProcessTestData 1 "\\n" String.toInt
+data = readProcessTestData 1 "\n" String.toInt
 
 checkWindow : List Int -> Int
 checkWindow list =

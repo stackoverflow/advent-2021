@@ -1,6 +1,6 @@
 module day5
 
-import util as U
+import util (readProcessTestData)
 
 typealias Coords = { x1 : Int, x2 : Int, y1 : Int, y2 : Int }
 
@@ -13,7 +13,7 @@ parseLine line =
   {x1, x2, y1, y2}
 
 data : List Coords
-data = U.readProcessTestData 5 "\\n" parseLine
+data = readProcessTestData 5 "\n" parseLine
 
 findDuplicates : ({ x1 : Int, x2 : Int, y1 : Int, y2 : Int } -> Boolean) -> Int
 findDuplicates filter =

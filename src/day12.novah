@@ -3,7 +3,7 @@ module day12
 import util (at, readProcessTestData)
 
 input : List (List String)
-input = readProcessTestData 12 "\\n" (String.split "-")
+input = readProcessTestData 12 "\n" (String.split "-")
 
 findPaths : List String -> (List String -> String -> Boolean) -> String -> List (List String)
 findPaths acc allow path =

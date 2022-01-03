@@ -15,7 +15,7 @@ input : { x : Range Int, y : Range Int }
 input = readTestData 17 |> parseInput
 
 probe : Int -> Int -> Probe
-probe vx vy= { vx, vy, x: 0, y: 0, hit: false, highest: 0 }
+probe vx vy = { vx, vy, x: 0, y: 0, hit: false, highest: 0 }
 
 step : { x : Range Int, y : Range Int } -> Probe -> Probe
 step target p =

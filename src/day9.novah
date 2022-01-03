@@ -1,16 +1,14 @@
 module day9
 
-import util as U
+import novah.list (map, mapIndexed, filterIndexed, flatten, nth, sumOf, removeNones, filter, sortBy, size, reverse, take, foldl)
+import util (readProcessTestData)
 
 input : List (List Int)
-input = U.readProcessTestData 9 "\\n" (String.toList >> List.map (toString >> String.toInt))
-
-getOr10 : List (List Int) -> Int -> Int -> Int
-getOr10 data x y =
-  List.nth y data ? List.nth x ?: 10
+input = readProcessTestData 9 "\n" (String.toList >> map (toString >> String.toInt))
 
 lowestNeighbor : List (List Int) -> Int -> Int -> Int -> Boolean
 lowestNeighbor data x y num =
+  let getOr10 matrix xx yy = nth yy matrix ? nth xx ?: 10
   getOr10 data (x - 1) y > num
     && getOr10 data (x + 1) y > num
     && getOr10 data x (y - 1) > num
@@ -19,27 +17,27 @@ lowestNeighbor data x y num =
 pub
 part1 : Unit -> Int
 part1 _ =
-  List.mapIndexed (\y list -> List.filterIndexed (\x num -> lowestNeighbor input x y num) list) input
-    |> List.flatten |> List.sumOf (_ + 1)
+  mapIndexed (\y list -> filterIndexed (\x num -> lowestNeighbor input x y num) list) input
+    |> flatten |> sumOf (_ + 1)
 
 pub
 part2 : Unit -> Int
 part2 _ =
   let origins =
-    List.mapIndexed (\y list -> List.mapIndexed (\x num -> if lowestNeighbor input x y num then Some (x <> y) else None) list) input
-      |> List.flatten |> List.removeNones
+    mapIndexed (\y list -> mapIndexed (\x num -> if lowestNeighbor input x y num then Some (x <> y) else None) list) input
+      |> flatten |> removeNones
   
-  let contains (Tuple x y) = List.nth y input ? List.nth x |> Option.isSome
+  let contains acc (Tuple x y) as tup = not (Set.contains tup acc) && (nth y input ? nth x |> Option.isSome)
+  let isBasin v (Tuple x y) = input.[y].[x] > v && input.[y].[x] != 9
+
   let findBasin acc = case _ of
     [] -> Set.toList acc
     [(Tuple x y) as index :: rest] ->
       let v = input.[y].[x]
       let new =
         [x - 1 <> y, x + 1 <> y, x <> y - 1, x <> y + 1]
-          |> List.filter (\tup -> not (Set.contains tup acc))
-          |> List.filter contains
-          |> List.filter (\(Tuple xx yy) -> input.[yy].[xx] > v && input.[yy].[xx] != 9)
+          |> filter (\tup -> contains acc tup && isBasin v tup)
       findBasin (Set.add index acc) (rest ++ new)
 
-  let basins = List.map (\x -> findBasin #{} [x]) origins
-  basins |> List.sortBy List.size |> List.reverse |> List.take 3 |> List.foldl (\acc list -> acc * List.size list) 1
+  let basins = map (\x -> findBasin #{} [x]) origins
+  basins |> sortBy size |> reverse |> take 3 |> foldl (\acc list -> acc * size list) 1

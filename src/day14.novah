@@ -16,7 +16,7 @@ mapTemplate (list : List String) =
 
 input : { rules : Map String String, template : Map String Int64 }
 input =
-  readTestData 14 |> String.split "\\n\\n" |> (\[start, rules] ->
+  readTestData 14 |> String.split "\n\n" |> (\[start, rules] ->
     let template = String.toList start |> List.map toString |> mapTemplate
     let assoc str = String.split " -> " str |> \[k, v] -> k <> v
     {template, rules: String.lines rules |> Map.associate assoc}

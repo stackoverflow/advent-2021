@@ -1,6 +1,6 @@
 module day4
 
-import util as U
+import util (readTestData)
 
 typealias Game = { boards : List (List (List Int)), numbers : List Int, pos : Int }
 
@@ -20,7 +20,7 @@ parseLines lines =
   }
 
 data : Game
-data = U.readTestData 4 |> String.split "\\n\\n" |> parseLines
+data = readTestData 4 |> String.split "\n\n" |> parseLines
 
 won : List Int -> Int -> List (List Int) -> Boolean
 won numbers pos board =

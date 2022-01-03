@@ -1,11 +1,11 @@
 module day6
 
 import novah.computation
-import util as U
+import util (readProcessTestData)
 
 input : List Int64
 input =
-  U.readProcessTestData 6 "\\n" (String.split ",")
+  readProcessTestData 6 "\n" (String.split ",")
     |> _.[0]
     |> List.map String.toInt64
 

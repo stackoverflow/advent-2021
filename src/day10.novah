@@ -1,6 +1,6 @@
 module day10
 
-import util as U
+import util (readProcessTestData, getUnsafe)
 
 pairs : Map Char Char
 pairs = Map.new [')' <> '(', ']' <> '[', '}' <> '{', '>' <> '<']
@@ -17,7 +17,7 @@ parse stack = case _ of
       else other <> stack
 
 input : List (Tuple (Option Char) (List Char))
-input = U.readProcessTestData 10 "\\n" (String.toList >> parse [])
+input = readProcessTestData 10 "\n" (String.toList >> parse [])
 
 pub
 part1 : Unit -> Int
@@ -25,7 +25,7 @@ part1 _ =
   let map = Map.new ['(' <> 3, '[' <> 57, '{' <> 1197, '<' <> 25137]
   input
     |> List.mapSome (\(Tuple invalid _) -> invalid)
-    |> List.sumOf (\c -> U.getUnsafe c map)
+    |> List.sumOf (\c -> getUnsafe c map)
 
 pub
 part2 : Unit -> Int64
@@ -35,7 +35,7 @@ part2 _ =
     input
       |> List.filter (\(Tuple invalid _) -> Option.isNone invalid)
       |> List.map (\(Tuple _ stack) ->
-        List.map (\c -> U.getUnsafe c map) stack
+        List.map (\c -> getUnsafe c map) stack
           |> List.foldl (\acc n -> acc * 5L + n) 0L
       )
   (List.sort res).[List.size res / 2]

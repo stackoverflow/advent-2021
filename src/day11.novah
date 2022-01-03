@@ -5,7 +5,7 @@ foreign import novah.Ref
 import util (addAll, isIn, linear, forked, readProcessTestData)
 
 input : List (List Int)
-input = readProcessTestData 11 "\\n" (String.toList >> List.map (toString >> String.toInt))
+input = readProcessTestData 11 "\n" (String.toList >> List.map (toString >> String.toInt))
 
 flashes : Ref Int
 flashes = Ref#new(0)

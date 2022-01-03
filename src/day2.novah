@@ -1,6 +1,6 @@
 module day2
 
-import util as U
+import util (readProcessTestData)
 
 toCoord : String -> { d : Int, h : Int }
 toCoord str =
@@ -12,7 +12,7 @@ toCoord str =
     _ -> { h: 0, d: amount }
 
 data : List { d : Int, h : Int }
-data = U.readProcessTestData 2 "\\n" toCoord
+data = readProcessTestData 2 "\n" toCoord
 
 pub
 part1 : Unit -> Int

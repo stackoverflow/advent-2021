@@ -4,7 +4,7 @@ import util (readTestData)
 
 parse : String -> { coords : Set (Tuple Int Int), folds : List (Tuple String Int) }
 parse str =
-  let [cs, fs] = String.split "\\n\\n" str
+  let [cs, fs] = String.split "\n\n" str
   let coords =
     String.lines cs |> List.map (\coord ->
       String.split "," coord |> (\[x, y] -> String.toInt x <> String.toInt y)

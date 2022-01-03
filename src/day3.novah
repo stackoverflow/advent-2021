@@ -1,9 +1,9 @@
 module day3
 
-import util as U
+import util (readProcessTestData)
 
 data : List String
-data = U.readProcessTestData 3 "\\n" identity
+data = readProcessTestData 3 "\n" identity
 
 isChar : Int -> Char -> String -> Boolean
 isChar i c str = String.charAt i str == c

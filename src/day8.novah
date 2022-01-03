@@ -1,10 +1,10 @@
 module day8
 
-import util as U
+import util (readProcessTestData, getUnsafe)
 
 input : List (List (List String))
 input =
-  U.readProcessTestData 8 "\\n"
+  readProcessTestData 8 "\n"
     (String.split "\\|" >> List.map (String.strip >> String.split " "))
 
 pub
@@ -22,9 +22,9 @@ part2 _ =
     possibilities
       |> List.find (\x ->
         Set.size x == size
-          && intersect x (U.getUnsafe 1 map) == i1
-          && intersect x (U.getUnsafe 7 map) == i7
-          && intersect x (U.getUnsafe 4 map) == i4
+          && intersect x (getUnsafe 1 map) == i1
+          && intersect x (getUnsafe 7 map) == i7
+          && intersect x (getUnsafe 4 map) == i4
       ) |> Option.unwrap
   
   let solve [ns, sol] =
@@ -40,7 +40,7 @@ part2 _ =
         |> Map.put 9 (findNumber baseNumbers nums 6 2 3 4)
     let map = Map.mapValues (\k v -> v <> k) allNumbers |> Map.values |> Map.new
     sol
-      |> List.map (\x -> U.getUnsafe (String.toSet x) map |> toString)
+      |> List.map (\x -> getUnsafe (String.toSet x) map |> toString)
       |> String.join "" |> String.toInt
   
   List.sumOf solve input

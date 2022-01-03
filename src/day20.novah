@@ -29,13 +29,6 @@ enhance image algorithm fillChar =
         updateAt y (setAt x algorithm.[index]) exp
         ()
 
-printImage : List (List t115) -> Unit
-printImage image =
-  List.forEach image \l ->
-    List.forEach l \c ->
-      print c
-    println ""
-
 run : Int -> List (List Char) -> List Char -> Int
 run times image algorithm =
   let go n img fillChar =

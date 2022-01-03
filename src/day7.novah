@@ -1,9 +1,9 @@
 module day7
 
-import util as U
+import util (readProcessTestData)
 
 input : List Int
-input = U.readProcessTestData 7 "," String.toInt
+input = readProcessTestData 7 "," String.toInt
 
 fuel : (Int -> Int) -> Int
 fuel fn =
