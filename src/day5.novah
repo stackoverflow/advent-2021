@@ -9,7 +9,7 @@ parseLine line =
   let [x1, y1, x2, y2] =
     Re.find #"(\d+),(\d+) -> (\d+),(\d+)" line
       |> removeFirst
-      |> List.map String.toInt
+      |> List.map int
   {x1, x2, y1, y2}
 
 data : List Coords

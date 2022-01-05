@@ -1,6 +1,6 @@
 module day8
 
-import util (readProcessTestData, getUnsafe)
+import util (readProcessTestData)
 
 input : List (List (List String))
 input =
@@ -11,25 +11,25 @@ pub
 part1 : Unit -> Int
 part1 _ =
   let uniques str = Set.contains (String.size str) #{2, 3, 4, 7}
-  List.map _.[1] input
+  List.map (_ ! 1) input
     |> List.sumOf (List.count uniques)
 
 pub
 part2 : Unit -> Int
 part2 _ =
   let intersect s1 s2 = Set.intersection s1 s2 |> Set.size
-  let findNumber map possibilities size i1 i7 i4 =
+  let findNumber (map : Map Int (Set a)) possibilities size i1 i7 i4 =
     possibilities
       |> List.find (\x ->
         Set.size x == size
-          && intersect x (getUnsafe 1 map) == i1
-          && intersect x (getUnsafe 7 map) == i7
-          && intersect x (getUnsafe 4 map) == i4
-      ) |> Option.unwrap
+          && intersect x map.[1] == i1
+          && intersect x map.[7] == i7
+          && intersect x map.[4] == i4
+      ) |> _!!
   
   let solve [ns, sol] =
     let nums = ns |> List.sortBy String.size |> List.map String.toSet
-    let baseNumbers = Map.new [1 <> nums.[0], 7 <> nums.[1], 4 <> nums.[2], 8 <> nums.[-1]]
+    let baseNumbers = Map.new [1 ; nums.[0], 7 ; nums.[1], 4 ; nums.[2], 8 ; nums.[-1]]
     let allNumbers =
       baseNumbers
         |> Map.put 2 (findNumber baseNumbers nums 5 1 2 2)
@@ -38,9 +38,9 @@ part2 _ =
         |> Map.put 3 (findNumber baseNumbers nums 5 2 3 3)
         |> Map.put 0 (findNumber baseNumbers nums 6 2 3 3)
         |> Map.put 9 (findNumber baseNumbers nums 6 2 3 4)
-    let map = Map.mapValues (\k v -> v <> k) allNumbers |> Map.values |> Map.new
+    let map = Map.mapValues (\k v -> v ; k) allNumbers |> Map.values |> Map.new
     sol
-      |> List.map (\x -> getUnsafe (String.toSet x) map |> toString)
-      |> String.join "" |> String.toInt
+      |> List.map (\x -> map.[String.toSet x] |> toString)
+      |> String.join "" |> int
   
   List.sumOf solve input

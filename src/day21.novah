@@ -1,7 +1,5 @@
 module day21
 
-import util (min, max)
-
 // based on https://old.reddit.com/r/adventofcode/comments/rl6p8y/2021_day_21_solutions/hpkxh2c/
 
 input : List Int32
@@ -11,25 +9,25 @@ pub
 part1 : Unit -> Int
 part1 _ =
   let run pos total r player =
-    if total.[player] < 1000 then
+    if (total ! player) < 1000 then
       let p = 1 - player
       let npos = pos |> updateAt p (\v -> (v + 3 * r + 3) % 10)
       let tot = total |> updateAt p (\t -> t + npos.[p] + 1)
       run npos tot (r + 3) p
-    else total <> r
+    else total ; r
   
-  let (Tuple total roll) = run [input.[0] - 1, input.[1] - 1] [0, 0] 1 1
-  min total * (roll - 1)
+  let (total ; roll) = run [input.[0] - 1, input.[1] - 1] [0, 0] 1 1
+  (List.min total)!! * (roll - 1)
 
 rollFrequencies : List (Tuple Int Int)
-rollFrequencies = [3 <> 1, 4 <> 3, 5 <> 6, 6 <> 7, 7 <> 6, 8 <> 3, 9 <> 1]
+rollFrequencies = [3 ; 1, 4 ; 3, 5 ; 6, 6 ; 7, 7 ; 6, 8 ; 3, 9 ; 1]
 
 wins : Int -> Int -> Int -> Int -> List Int64
 wins p1 t1 p2 t2 =
   if t2 <= 0 then [0L, 1L]
   else
     List.withLinear [0L, 0L] \ws ->
-      List.forEach rollFrequencies \(Tuple roll freq) ->
+      List.forEach rollFrequencies \(roll ; freq) ->
         let newPos = (p1 + roll) % 10
         let [wins2, wins1] = wins p2 t2 newPos (t1 - 1 - newPos)
         ws |> updateAt 0 (\w1 -> w1 + wins1 * int64 freq)
@@ -38,4 +36,4 @@ wins p1 t1 p2 t2 =
 
 pub
 part2 : Unit -> Int64
-part2 _ = wins (input.[0] - 1) 21 (input.[1] - 1) 21 |> max
+part2 _ = wins (input.[0] - 1) 21 (input.[1] - 1) 21 |> List.max |> _!!

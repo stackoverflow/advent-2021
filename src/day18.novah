@@ -1,6 +1,6 @@
 module day18
 
-import util (at, readProcessTestData)
+import util (readProcessTestData)
 
 type SnailNumber
   = Regular Int Int
@@ -11,15 +11,15 @@ snailEquals : Equals SnailNumber
 snailEquals = Equals Java.equals
 
 parseNumber : Int -> String -> Tuple SnailNumber String
-parseNumber depth num = case num `at` 0 of
+parseNumber depth num = case num.[0] of
   '[' ->
-    let (Tuple n1 line) = parseNumber (depth + 1) (String.drop 1 num)
-    let (Tuple n2 line2) = parseNumber (depth + 1) (String.drop 1 line)
-    Pair n1 n2 depth <> String.drop 1 line2
+    let (n1 ; line) = parseNumber (depth + 1) (String.drop 1 num)
+    let (n2 ; line2) = parseNumber (depth + 1) (String.drop 1 line)
+    Pair n1 n2 depth ; String.drop 1 line2
   ',' -> parseNumber depth (String.drop 1 num)
   char ->
-    let n = char |> toString |> String.toInt
-    Regular n depth <> String.drop 1 num
+    let n = char |> toString |> int
+    Regular n depth ; String.drop 1 num
 
 input : List SnailNumber
 input = readProcessTestData 18 "\\n" (parseNumber 0 >> fst)
@@ -54,22 +54,22 @@ tryExplode = case _ of
 
 trySplit : SnailNumber -> Tuple Boolean SnailNumber
 trySplit = case _ of
-  Regular n depth if n >= 10 -> true <> Pair (Regular (splitDown n) (depth + 1)) (Regular (splitUp n) (depth + 1)) depth
-  (Regular _ _) as n -> false <> n
+  Regular n depth if n >= 10 -> true ; Pair (Regular (splitDown n) (depth + 1)) (Regular (splitUp n) (depth + 1)) depth
+  (Regular _ _) as n -> false ; n
   (Pair n1 n2 depth) as n ->
-    let (Tuple split splitnum) = trySplit n1
-    if split then true <> Pair splitnum n2 depth
+    let (split ; splitnum) = trySplit n1
+    if split then true ; Pair splitnum n2 depth
     else
-      let (Tuple split2 splitnum2) = trySplit n2
-      if split2 then true <> Pair n1 splitnum2 depth
-      else false <> n
+      let (split2 ; splitnum2) = trySplit n2
+      if split2 then true ; Pair n1 splitnum2 depth
+      else false ; n
 
 reduce : SnailNumber -> SnailNumber
 reduce snum =
   let {exploded, n} = tryExplode snum
   if exploded then reduce n
   else
-    let (Tuple split sn) = trySplit snum
+    let (split ; sn) = trySplit snum
     if split then reduce sn
     else snum
 
@@ -89,10 +89,10 @@ add s1 s2 = Pair (increaseDepth s1) (increaseDepth s2) 0
 pub
 part1 : Unit -> Int
 part1 _ =
-  input |> List.reduce (\acc snum -> reduce (add acc snum)) |> Option.unwrap |> magnitude
+  input |> List.reduce (\acc snum -> reduce (add acc snum)) |> _!! |> magnitude
 
 pub
 part2 : Unit -> Int
 part2 _ =
-  let pairs = input |> List.flatMap (\snum -> input |> List.filter (_ != snum) |> List.map (_ <> snum))
-  pairs |> List.map (\(Tuple s1 s2) -> reduce (add s1 s2)) |> List.maxOf magnitude |> Option.unwrap
+  let pairs = input |> List.flatMap (\snum -> input |> List.filter (_ != snum) |> List.map (_ ; snum))
+  pairs |> List.map (\(s1 ; s2) -> reduce (add s1 s2)) |> List.maxOf magnitude |> _!!

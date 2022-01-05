@@ -3,13 +3,13 @@ module day7
 import util (readProcessTestData)
 
 input : List Int
-input = readProcessTestData 7 "," String.toInt
+input = readProcessTestData 7 "," int
 
 fuel : (Int -> Int) -> Int
 fuel fn =
   (List.minOr 0 input) ... (List.maxOr 0 input)
     |> List.minOf (\x -> List.sumOf (\i -> Math.abs (x - i) |> fn) input)
-    |> Option.unwrap
+    |> _!!
 
 pub
 part1 : Unit -> Int

@@ -1,6 +1,6 @@
 module day25
 
-import util (readProcessTestData, at)
+import util (readProcessTestData)
 
 input : List String
 input = readProcessTestData 25 "\n" identity
@@ -15,7 +15,7 @@ part1 _ =
   let move matrix char =
     matrix |> List.map (\line ->
       let res = line |> String.replace (format "%s." [char]) (format ".%s" [char])
-      if line `at` 0 == '.' && line `at` -1 == char then
+      if line.[0] == '.' && line.[-1] == char then
         toString char ++ String.substring 1 (String.lastIndex res) res ++ "."
       else res
     )

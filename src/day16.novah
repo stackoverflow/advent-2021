@@ -1,55 +1,58 @@
 module day16
 
-import util (readTestData, at, zeroPad, min, max, getUnsafe, toInt2)
+import util (readTestData, zeroPad, min, max)
 
 type Packet
   = Literal { version : Int64, typ : Int64, num : Int64 }
   | Op { version : Int64, typ : Int64, packets : List Packet }
 
+toInt2 : String -> Int64
+toInt2 = Int64#parseLong(_, 2)
+
 parseBits : Int -> String -> Tuple Int64 String
-parseBits amount bits = toInt2 (String.take amount bits) <> String.drop amount bits
+parseBits amount bits = toInt2 (String.take amount bits) ; String.drop amount bits
 
 parseNum : String -> String -> Tuple Int64 String
 parseNum acc bits =
   let partial = acc ++ (String.substring 1 5 bits)
-  if bits `at` 0 == '1' then
+  if bits.[0] == '1' then
     parseNum partial (String.drop 5 bits)
   else
-    toInt2 partial <> (String.drop 5 bits)
+    toInt2 partial ; (String.drop 5 bits)
 
 parseOp : String -> Tuple (List Packet) String
 parseOp bits =
   let parseUntil acc bitss stop =
-    if stop acc bitss then acc <> bitss
+    if stop acc bitss then acc ; bitss
     else
-      let (Tuple pack rest) = parsePacket bitss
+      let (pack ; rest) = parsePacket bitss
       parseUntil (addLast pack acc) rest stop
 
-  let (Tuple i rest) = parseBits 1 bits
+  let (i ; rest) = parseBits 1 bits
   if i == 0L then // size packet
-    let (Tuple length rest2) = parseBits 15 rest
-    let (Tuple packetBits restBits) = String.take (int length) rest2 <> String.drop (int length) rest2
-    fst (parseUntil [] packetBits (\_ bs -> String.isEmpty bs)) <> restBits
+    let (length ; rest2) = parseBits 15 rest
+    let (packetBits ; restBits) = String.take (int length) rest2 ; String.drop (int length) rest2
+    fst (parseUntil [] packetBits (\_ bs -> String.isEmpty bs)) ; restBits
   else // number of packets
-    let (Tuple total rest2) = parseBits 11 rest
+    let (total ; rest2) = parseBits 11 rest
     parseUntil [] rest2 (\acc _ -> List.size acc == int total)
 
 parsePacket : String -> Tuple Packet String
 parsePacket bits =
-  let (Tuple version rest) = parseBits 3 bits
-  let (Tuple typ rest2) = parseBits 3 rest
+  let (version ; rest) = parseBits 3 bits
+  let (typ ; rest2) = parseBits 3 rest
   if typ == 4L then
-    let (Tuple num restBits) = parseNum "" rest2
-    Literal { version, typ, num} <> restBits
+    let (num ; restBits) = parseNum "" rest2
+    Literal { version, typ, num} ; restBits
   else
-    let (Tuple packets restBits) = parseOp rest2
-    Op { version, typ, packets} <> restBits
+    let (packets ; restBits) = parseOp rest2
+    Op { version, typ, packets} ; restBits
 
 input : Packet
 input =
   readTestData 16
     |> String.toList |> List.map (
-      toString >> String.toIntRadix 16 >> Int32#toBinaryString(_) >> zeroPad 4
+      toString >> (\x -> (Number.parseIntRadix 16 x)!!) >> Int32#toBinaryString(_) >> zeroPad 4
     ) |> String.join "" |> parsePacket |> fst
 
 pub
@@ -65,11 +68,11 @@ part2 : Unit -> Int64
 part2 _ =
   let comp fun [x, y] = if x `fun` y then 1L else 0L
   let ops =
-    Map.new [0L <> List.sum, 1L <> List.product, 2L <> min, 3L <> max, 5L <> comp (>), 6L <> comp (<), 7L <> comp (==)]
+    Map.new [0L ; List.sum, 1L ; List.product, 2L ; min, 3L ; max, 5L ; comp (>), 6L ; comp (<), 7L ; comp (==)]
 
   let parse = case _ of
     Literal l -> l.num
     Op op ->
       let vals = List.map parse op.packets
-      (getUnsafe op.typ ops) vals
+      ops.[op.typ] vals
   parse input

@@ -1,23 +1,23 @@
 module day20
 
 import novah.list (repeat, size)
-import util (readTestData)
+import util (readTestData, toInt2)
 
 input : Tuple (List Char) (List (List Char))
 input =
   readTestData 20 |> String.split "\n\n" |> (\[algo, inp] ->
     let image = String.lines inp |> List.map String.toList
-    String.toList algo <> image
+    String.toList algo ; image
   )
 
 findIndex : List (List Char) -> Int -> Int -> Char -> Int
 findIndex image x y fillChar =
-  [ x - 1 <> y - 1, x <> y - 1, x + 1 <> y - 1
-  , x - 1 <> y, x <> y, x + 1 <> y
-  , x - 1 <> y + 1, x <> y + 1, x + 1 <> y + 1
-  ] |> List.map (\(Tuple xx yy) -> List.nth (yy - 1) image ? List.nth (xx - 1) ?: fillChar)
+  [ (x - 1) ; (y - 1), x ; (y - 1), (x + 1) ; (y - 1)
+  , (x - 1) ; y, x ; y, (x + 1) ; y
+  , (x - 1) ; (y + 1), x ; (y + 1), (x + 1) ; (y + 1)
+  ] |> List.map (\(xx ; yy) -> List.nth (yy - 1) image ? List.nth (xx - 1) ?: fillChar)
     |> List.map (\c -> if c == '#' then "1" else "0") |> String.join ""
-    |> String.toIntRadix 2
+    |> toInt2
 
 enhance : List (List Char) -> List Char -> Char -> List (List Char)
 enhance image algorithm fillChar =

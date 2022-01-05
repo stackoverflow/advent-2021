@@ -4,7 +4,7 @@ import novah.list (map, mapIndexed, filterIndexed, flatten, nth, sumOf, removeNo
 import util (readProcessTestData)
 
 input : List (List Int)
-input = readProcessTestData 9 "\n" (String.toList >> map (toString >> String.toInt))
+input = readProcessTestData 9 "\n" (String.toList >> map (toString >> int))
 
 lowestNeighbor : List (List Int) -> Int -> Int -> Int -> Boolean
 lowestNeighbor data x y num =
@@ -24,18 +24,18 @@ pub
 part2 : Unit -> Int
 part2 _ =
   let origins =
-    mapIndexed (\y list -> mapIndexed (\x num -> if lowestNeighbor input x y num then Some (x <> y) else None) list) input
+    mapIndexed (\y list -> mapIndexed (\x num -> if lowestNeighbor input x y num then Some (x ; y) else None) list) input
       |> flatten |> removeNones
   
-  let contains acc (Tuple x y) as tup = not (Set.contains tup acc) && (nth y input ? nth x |> Option.isSome)
-  let isBasin v (Tuple x y) = input.[y].[x] > v && input.[y].[x] != 9
+  let contains acc (x ; y) as tup = not (Set.contains tup acc) && (nth y input ? nth x |> Option.isSome)
+  let isBasin v (x ; y) = input.[y].[x] > v && input.[y].[x] != 9
 
   let findBasin acc = case _ of
     [] -> Set.toList acc
-    [(Tuple x y) as index :: rest] ->
+    [(x ; y) as index :: rest] ->
       let v = input.[y].[x]
       let new =
-        [x - 1 <> y, x + 1 <> y, x <> y - 1, x <> y + 1]
+        [(x - 1) ; y, (x + 1) ; y, x ; (y - 1), x ; (y + 1)]
           |> filter (\tup -> contains acc tup && isBasin v tup)
       findBasin (Set.add index acc) (rest ++ new)
 

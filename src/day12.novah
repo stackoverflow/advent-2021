@@ -1,6 +1,6 @@
 module day12
 
-import util (at, readProcessTestData)
+import util (readProcessTestData)
 
 input : List (List String)
 input = readProcessTestData 12 "\n" (String.split "-")
@@ -22,7 +22,7 @@ pub
 part1 : Unit -> Int
 part1 _ =
   let allow acc value =
-    Char#isUpperCase(value `at` 0) || value == "end" || not (List.contains value acc)
+    value == "end" || Char#isUpperCase(value.[0]) || not (List.contains value acc)
   
   findPaths [] allow "start" |> List.size
 
@@ -30,9 +30,9 @@ pub
 part2 : Unit -> Int
 part2 _ =
   let allow acc value =
-    let lowers = List.filter (\v -> Char#isLowerCase(v `at` 0) && v != "start" && v != "end") acc
+    let lowers = List.filter (\v -> v != "start" && v != "end" && Char#isLowerCase(v.[0])) acc
     let dups = List.size lowers > (Set.fromList lowers |> Set.size)
     let should = if dups then not (List.contains value acc) else (List.filter (_ == value) acc |> List.size) < 2
-    value != "start" && (Char#isUpperCase(value `at` 0) || value == "end" || should)
+    value != "start" && (Char#isUpperCase(value.[0]) || value == "end" || should)
   
   findPaths [] allow "start" |> List.size

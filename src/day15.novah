@@ -4,7 +4,7 @@ foreign import java.util.Comparator
 foreign import java.util.PriorityQueue
 foreign import novah.Ref
 
-import util (readTestData, getUnsafe, addAll, linear)
+import util (readTestData, addAll, linear)
 
 type Vertex = Vertex Int Int Int
 
@@ -16,7 +16,7 @@ input =
     |> String.lines
     |> List.mapIndexed (\y line ->
       String.toList line |> List.mapIndexed (\x v ->
-        Vertex x y (toString v |> String.toInt)
+        Vertex x y (toString v |> int)
       )
     ) |> List.flatten
 
@@ -26,16 +26,16 @@ aStar start hFunc neighbors =
   let q = PriorityQueue#new(comp as Comparator Object) : PriorityQueue Pair
   q#add(Pair (hFunc start) start)
 
-  let pathCost = (Map.new [start <> 0])#linear() : Map Vertex Int
+  let pathCost = (Map.new [start ; 0])#linear() : Map Vertex Int
   let res = Ref#new(-1)
 
   while res#-val < 0 || q#size() != 0 do
     let (Pair _ s) = q#poll()
-    if hFunc s == 0 then res#-val <- getUnsafe s pathCost
+    if hFunc s == 0 then res#-val <- pathCost.[s]
 
     List.forEach (neighbors s) \(Vertex _ _ v) as s2 ->
-      let g = getUnsafe s pathCost + v
-      if not (Map.hasKey s2 pathCost) || g < (getUnsafe s2 pathCost) then
+      let g = pathCost.[s] + v
+      if not (Map.hasKey s2 pathCost) || g < pathCost.[s2] then
         q#add(Pair (g + hFunc s2) s2)
         Map.put s2 g pathCost
         ()
@@ -45,7 +45,7 @@ makeGrid : List Vertex -> Map (Tuple Int Int) Vertex
 makeGrid data =
   Map.withLinear (Map.new []) \m ->
     List.forEach data \(Vertex x y _) as v ->
-      Map.put (x <> y) v m
+      Map.put (x ; y) v m
       ()
 
 aStarSearch : List Vertex -> Vertex -> Int
@@ -53,7 +53,7 @@ aStarSearch data start =
   let (Vertex gx gy _) = data.[-1]
   let grid = makeGrid data
   let neighbors (Vertex x y _) =
-    [x - 1 <> y, x + 1 <> y, x <> y - 1, x <> y + 1] |> List.mapSome (\tup -> Map.get tup grid)
+    [(x - 1) ; y, (x + 1) ; y, x ; (y - 1), x ; (y + 1)] |> List.mapSome (\tup -> Map.get tup grid)
   let hFunc (Vertex x y _) = Math.abs (gx - x) + Math.abs (gy - y)
   aStar start hFunc neighbors
 

@@ -2,17 +2,10 @@ module day17
 
 foreign import novah.Ref
 
-import util (readTestData)
-
 typealias Probe = { x : Int, y : Int, vx : Int, vy : Int, highest : Int, hit : Boolean }
 
-parseInput : String -> { x : Range Int, y : Range Int }
-parseInput data =
-  let [_, x1, x2, y1, y2] = Re.find #"target area: x=([+|-]?\d+)\.\.([+|-]?\d+), y=([+|-]?\d+)\.\.([+|-]?\d+)" data
-  {x: String.toInt x1 .> String.toInt x2, y: String.toInt y1 .> String.toInt y2 }
-
 input : { x : Range Int, y : Range Int }
-input = readTestData 17 |> parseInput
+input = { x: 14 .> 50, y: -267 .> -225}
 
 probe : Int -> Int -> Probe
 probe vx vy = { vx, vy, x: 0, y: 0, hit: false, highest: 0 }

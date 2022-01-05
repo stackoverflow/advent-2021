@@ -2,10 +2,11 @@ module day11
 
 foreign import novah.Ref
 
-import util (addAll, isIn, linear, forked, readProcessTestData)
+import novah.list (contains)
+import util (addAll, linear, forked, readProcessTestData)
 
 input : List (List Int)
-input = readProcessTestData 11 "\n" (String.toList >> List.map (toString >> String.toInt))
+input = readProcessTestData 11 "\n" (String.toList >> List.map (toString >> int))
 
 flashes : Ref Int
 flashes = Ref#new(0)
@@ -13,9 +14,9 @@ flashes = Ref#new(0)
 step : List (List Int) -> List (List Int)
 step data =
   let neighbors x y =
-    [ x - 1 <> y, x + 1 <> y, x <> y - 1, x <> y + 1
-    , x - 1 <> y - 1, x + 1 <> y - 1, x - 1 <> y + 1, x + 1 <> y + 1
-    ] |> List.filter (\(Tuple xx yy) -> xx `isIn` (0 ... 9) && yy `isIn` (0 ... 9))
+    [ (x - 1) ; y, (x + 1) ; y, x ; (y - 1), x ; (y + 1)
+    , (x - 1) ; (y - 1), (x + 1) ; (y - 1), (x - 1) ; (y + 1), (x + 1) ; (y + 1)
+    ] |> List.filter (\(xx ; yy) -> xx `contains` (0 ... 9) && yy `contains` (0 ... 9))
   
   let flash octs =
     let toFlash = linear []
@@ -26,9 +27,9 @@ step data =
         ()
     ))
 
-    let run res = case _ of
+    let run (res : List (List Int)) = case _ of
       [] -> res
-      [Tuple x y :: rest] ->
+      [x ; y :: rest] ->
         let v = res.[y].[x]
         let newocts = updateAt y (\l -> setAt x (v + 1) l) res
         if v == 9 then
@@ -53,8 +54,8 @@ part1 _ =
 pub
 part2 : Unit -> Int
 part2 _ =
-  let inSync data =
-    let x = data.[0].[0] : Int
+  let inSync (data : List (List Int)) =
+    let x = data.[0].[0]
     List.every (\l -> List.every (_ == x) l) data
   
   let steps = Ref#new(0)

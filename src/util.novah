@@ -14,11 +14,6 @@ readProcessTestData day regex mapper =
     |> List.map mapper
 
 pub
-getUnsafe : k -> Map k v -> v
-getUnsafe k map =
-  Map.get k map |> Option.unwrap
-
-pub
 addAll : List a -> List a -> Unit
 addAll list toAdd =
   List.forEach toAdd \e ->
@@ -26,22 +21,12 @@ addAll list toAdd =
     ()
 
 pub
-at : String -> Int -> Char
-at str idx =
-  let i = if idx >= 0 then idx else String.size str + idx
-  String.charAt i str
-
-pub
-isIn : {{ Equals a }} -> a -> List a -> Boolean
-isIn = List.contains
-
-pub
 min : {{ NumberOps a }} -> List a -> a
-min {{_}} list = List.min list |> Option.unwrap
+min {{_}} list = (List.min list)!!
 
 pub
 max : {{ NumberOps a }} -> List a -> a
-max {{_}} list = List.max list |> Option.unwrap
+max {{_}} list = (List.max list)!!
 
 pub
 linear : List a -> List a
@@ -52,8 +37,8 @@ forked : List a -> List a
 forked (list : List a) = list#forked()
 
 pub
-toInt2 : String -> Int64
-toInt2 = String.toInt64Radix 2
+toInt2 : String -> Int32
+toInt2 = Int32#parseInt(_, 2)
 
 pub
 zeroPad : Int -> String -> String

@@ -1,6 +1,6 @@
 module day14
 
-import util (readTestData, at, getUnsafe)
+import util (readTestData)
 
 increment : k -> Int64 -> Map k Int64 -> Map k Int64
 increment key amount map =
@@ -18,17 +18,17 @@ input : { rules : Map String String, template : Map String Int64 }
 input =
   readTestData 14 |> String.split "\n\n" |> (\[start, rules] ->
     let template = String.toList start |> List.map toString |> mapTemplate
-    let assoc str = String.split " -> " str |> \[k, v] -> k <> v
+    let assoc str = String.split " -> " str |> \[k, v] -> k ; v
     {template, rules: String.lines rules |> Map.associate assoc}
   )
 
 step : Map String String -> Map String Int64 -> Map String Int64
 step rules vals =
   Map.withLinear (Map.new []) \map ->
-    Map.forEach vals \pair count ->
-      let k1 = pair `at` 0 |> toString
-      let k2 = pair `at` 1 |> toString
-      let v = getUnsafe pair rules
+    Map.forEach vals \(pair : String) count ->
+      let k1 = pair.[0] |> toString
+      let k2 = pair.[1] |> toString
+      let v = rules.[pair]
       increment (k1 ++ v) count map
       increment (v ++ k2) count map
       ()
@@ -37,9 +37,9 @@ countElements : Map String Int64 -> Map String Int64
 countElements vals =
   let newmap =
     Map.withLinear (Map.new []) \map ->
-      Map.forEach vals \pair count ->
-        let k1 = pair `at` 0 |> toString
-        let k2 = pair `at` 1 |> toString
+      Map.forEach vals \(pair : String) count ->
+        let k1 = pair.[0] |> toString
+        let k2 = pair.[1] |> toString
         increment k1 count map
         increment k2 count map
         ()

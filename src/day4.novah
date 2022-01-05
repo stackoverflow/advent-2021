@@ -7,14 +7,14 @@ typealias Game = { boards : List (List (List Int)), numbers : List Int, pos : In
 parseLines : List String -> Game
 parseLines lines =
   let parseBoardLine =
-    String.strip >> String.split "\\s+" >> List.map String.toInt
+    String.strip >> String.split "\\s+" >> List.map int
   let parseBoard line =
     let rows = line |> String.lines |> List.map parseBoardLine
     let length = List.size rows.[0]
-    let cols = 0 .. length |> List.map (\i -> List.map _.[i] rows)
+    let cols = 0 .. length |> List.map (\i -> List.map (_ ! i) rows)
     rows ++ cols
   
-  { numbers: lines.[0] |> String.split "," |> List.map String.toInt
+  { numbers: lines.[0] |> String.split "," |> List.map int
   , boards: List.drop 1 lines |> List.map parseBoard
   , pos: 1
   }

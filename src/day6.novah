@@ -6,8 +6,8 @@ import util (readProcessTestData)
 input : List Int64
 input =
   readProcessTestData 6 "\n" (String.split ",")
-    |> _.[0]
-    |> List.map String.toInt64
+    |> _ ! 0
+    |> List.map int64
 
 simulate : Int -> Int64
 simulate days =

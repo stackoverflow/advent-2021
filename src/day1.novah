@@ -3,7 +3,7 @@ module day1
 import util (readProcessTestData)
 
 data : List Int
-data = readProcessTestData 1 "\n" String.toInt
+data = readProcessTestData 1 "\n" int
 
 checkWindow : List Int -> Int
 checkWindow list =
