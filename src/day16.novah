@@ -63,6 +63,7 @@ part1 _ =
     Op op -> op.version + List.sumOf count op.packets
   count input
 
+#[noWarn]
 pub
 part2 : Unit -> Int64
 part2 _ =

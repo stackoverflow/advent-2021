@@ -3,6 +3,7 @@ module day20
 import novah.list (repeat, size)
 import util (readTestData, toInt2)
 
+#[noWarn]
 input : Tuple (List Char) (List (List Char))
 input =
   readTestData 20 |> String.split "\n\n" |> (\[algo, inp] ->

@@ -5,6 +5,7 @@ import util (readProcessTestData, linear)
 input : List (List String)
 input = readProcessTestData 24 "\n" (String.split " ")
 
+#[noWarn]
 solve : List Int -> List (List String) -> String
 solve inp cmds =
   let stack = linear []

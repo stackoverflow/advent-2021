@@ -2,6 +2,7 @@ module day13
 
 import util (readTestData)
 
+#[noWarn]
 parse : String -> { coords : Set (Tuple Int Int), folds : List (Tuple String Int) }
 parse str =
   let [cs, fs] = String.split "\n\n" str

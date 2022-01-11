@@ -4,6 +4,7 @@ import util (readProcessTestData)
 
 typealias Coords = { x1 : Int, x2 : Int, y1 : Int, y2 : Int }
 
+#[noWarn]
 parseLine : String -> Coords
 parseLine line =
   let [x1, y1, x2, y2] =

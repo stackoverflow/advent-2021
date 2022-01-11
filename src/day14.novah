@@ -14,6 +14,7 @@ mapTemplate (list : List String) =
       increment (list.[i] ++ list.[i + 1]) 1L map
       ()
 
+#[noWarn]
 input : { rules : Map String String, template : Map String Int64 }
 input =
   readTestData 14 |> String.split "\n\n" |> (\[start, rules] ->

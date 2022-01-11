@@ -5,6 +5,7 @@ import util (readProcessTestData)
 input : List (List String)
 input = readProcessTestData 12 "\n" (String.split "-")
 
+#[noWarn]
 findPaths : List String -> (List String -> String -> Boolean) -> String -> List (List String)
 findPaths acc allow path =
   let newacc = addLast path acc

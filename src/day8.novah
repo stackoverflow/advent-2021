@@ -14,6 +14,7 @@ part1 _ =
   List.map (_ ! 1) input
     |> List.sumOf (List.count uniques)
 
+#[noWarn]
 pub
 part2 : Unit -> Int
 part2 _ =
