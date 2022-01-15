@@ -2,13 +2,10 @@ module day18
 
 import util (readProcessTestData)
 
+#[derive: {equalsSnailNumber: "Equals"}]
 type SnailNumber
   = Regular Int Int
   | Pair SnailNumber SnailNumber Int
-
-instance
-snailEquals : Equals SnailNumber
-snailEquals = Equals Java.equals
 
 parseNumber : Int -> String -> Tuple SnailNumber String
 parseNumber depth num = case num.[0] of
