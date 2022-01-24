@@ -41,8 +41,8 @@ plot (coords: Set (Tuple Int Int)) =
   let maxX = (Set.maxOf fst coords)!!
   let maxY = (Set.maxOf snd coords)!!
   let yy = atom 0
-  List.forEach (0 ... maxY) \y ->
-    List.forEach (0 ... maxX) \x ->
+  List.forEach [0 .. maxY] \y ->
+    List.forEach [0 .. maxX] \x ->
       if y > (deref yy) then
         println ""
         reset y yy

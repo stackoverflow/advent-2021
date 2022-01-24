@@ -5,7 +5,7 @@ foreign import novah.Ref
 typealias Probe = { x : Int, y : Int, vx : Int, vy : Int, highest : Int, hit : Boolean }
 
 input : { x : Range Int, y : Range Int }
-input = { x: 14 .> 50, y: -267 .> -225}
+input = { x: 14 .. 50, y: -267 .. -225}
 
 probe : Int -> Int -> Probe
 probe vx vy = { vx, vy, x: 0, y: 0, hit: false, highest: 0 }
@@ -23,18 +23,19 @@ step target p =
   { x, y, vx, vy: p.vy - 1, highest, hit }
 
 runSteps : Probe -> { x : Range Int, y : Range Int } -> Probe
-runSteps p target =
-  let pro = Ref#new(p)
+runSteps prob target =
   let bottom = Math.min (rangeStart target.y) (rangeEnd target.y)
-  while not pro#-val.hit && pro#-val.y > bottom do
-    pro#update(step target)
-  pro#-val
+  let go p =
+    if p.hit || p.y <= bottom then p
+    else go (step target p)
+  
+  go prob
 
 pub
 part1 : Unit -> Int
 part1 _ =
   let highest = atom 0
-  List.forEach (1 ... 300) \y ->
+  List.forEach [1 .. 300] \y ->
     let p = runSteps (probe 6 y) input
     if p.hit && (deref highest) < p.highest then
       reset p.highest highest
@@ -48,8 +49,8 @@ part2 _ =
   let bigX = Math.max (rangeStart input.x) (rangeEnd input.x) + 1
   let smallY = Math.min (rangeStart input.y) (rangeEnd input.y)
 
-  List.forEach (5 ... bigX) \x ->
-    List.forEach (smallY ... 267) \y ->
+  List.forEach [5 .. bigX] \x ->
+    List.forEach [smallY .. 267] \y ->
       let p = runSteps (probe x y) input
       if p.hit then
         total#update(_ + 1)

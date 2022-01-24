@@ -10,7 +10,7 @@ increment key amount map =
 mapTemplate : List String -> Map String Int64
 mapTemplate (list : List String) =
   Map.withLinear (Map.new []) \map ->
-    List.forEach (0 .. List.lastIndex list) \i ->
+    List.forEach [0 ... List.lastIndex list] \i ->
       increment (list.[i] ++ list.[i + 1]) 1L map
       ()
 
@@ -50,7 +50,7 @@ countElements vals =
 runSteps : Int -> Int64
 runSteps amount =
   let map = atom input.template
-  forEachRange (0 .> amount) \_ ->
+  forEachRange (0 ... amount) \_ ->
     swap (step input.rules) map
     ()
   let count = countElements (deref map)

@@ -19,7 +19,7 @@ simulate days =
           |> run (daysleft - 1)
   
   let data = do.list
-    for x in 0L ... 8L do
+    for x in [0L .. 9L] do
       yield List.count (_ == x) input |> int64
 
   run days data |> List.sum

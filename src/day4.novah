@@ -11,7 +11,7 @@ parseLines lines =
   let parseBoard line =
     let rows = line |> String.lines |> List.map parseBoardLine
     let length = List.size rows.[0]
-    let cols = 0 .. length |> List.map (\i -> List.map (_ ! i) rows)
+    let cols = [0 ... length] |> List.map (\i -> List.map (_ ! i) rows)
     rows ++ cols
   
   { numbers: lines.[0] |> String.split "," |> List.map int

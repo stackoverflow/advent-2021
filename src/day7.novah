@@ -7,7 +7,7 @@ input = readProcessTestData 7 "," int
 
 fuel : (Int -> Int) -> Int
 fuel fn =
-  (List.minOr 0 input) ... (List.maxOr 0 input)
+  [(List.minOr 0 input) .. (List.maxOr 0 input)]
     |> List.minOf (\x -> List.sumOf (\i -> Math.abs (x - i) |> fn) input)
     |> _!!
 

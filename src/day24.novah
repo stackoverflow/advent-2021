@@ -10,7 +10,7 @@ solve : List Int -> List (List String) -> String
 solve inp cmds =
   let stack = linear []
 
-  List.forEach (0 .. 14) \i ->
+  List.forEach [0 .. 13] \i ->
     let [div, chk, add] = [4, 5, 15] |> List.map (\x -> cmds.[i * 18 + x].[-1] |> int)
     if div == 1 then
       stack |> addFirst (i ; add)

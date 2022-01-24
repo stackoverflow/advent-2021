@@ -25,9 +25,9 @@ findDuplicates filter =
       [pp :: rest] ->
         let updated =
           case pp of
-            p if p.x1 == p.x2 -> (p.y1 ... p.y2) |> List.map (\y -> format "%s:%s" [p.x1, y])
-            p if p.y1 == p.y2 -> (p.x1 ... p.x2) |> List.map (\x -> format "%s:%s" [x, p.y1])
-            p -> List.zipWith (\x y -> format "%s:%s" [x, y]) (p.x1 ... p.x2) (p.y1 ... p.y2)
+            p if p.x1 == p.x2 -> [p.y1 .. p.y2] |> List.map (\y -> format "%s:%s" [p.x1, y])
+            p if p.y1 == p.y2 -> [p.x1 .. p.x2] |> List.map (\x -> format "%s:%s" [x, p.y1])
+            p -> List.zipWith (\x y -> format "%s:%s" [x, y]) [p.x1 .. p.x2] [p.y1 .. p.y2]
         
         let map =
           Map.withLinear acc \m ->

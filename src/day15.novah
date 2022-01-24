@@ -67,8 +67,8 @@ part2 _ =
   let newInput = linear input
   let (Vertex lastx _ _) = input.[-1]
   let size = lastx + 1
-  List.forEach (0 ... 4) \y ->
-    List.forEach (0 ... 4) \x ->
+  List.forEach [0 .. 4] \y ->
+    List.forEach [0 .. 4] \x ->
       if x != 0 || y != 0 then
         let toAdd =
           input |> List.map \(Vertex vx vy vv) ->

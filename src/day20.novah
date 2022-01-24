@@ -24,8 +24,8 @@ enhance : List (List Char) -> List Char -> Char -> List (List Char)
 enhance image algorithm fillChar =
   let expanded = repeat (size image + 2) (repeat (size image.[0] + 2) fillChar)
   List.withLinear expanded \exp ->
-    forEachRange (0 .> size exp) \y ->
-      forEachRange (0 .> size exp.[0]) \x ->
+    forEachRange (0 ... size exp) \y ->
+      forEachRange (0 ... size exp.[0]) \x ->
         let index = findIndex image x y fillChar
         updateAt y (setAt x algorithm.[index]) exp
         ()

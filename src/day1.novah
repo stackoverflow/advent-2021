@@ -8,7 +8,7 @@ data = readProcessTestData 1 "\n" int
 checkWindow : List Int -> Int
 checkWindow list =
   let check i = list.[i + 1] > list.[i]
-  0 .. (List.lastIndex list) |> List.count check
+  [0 ... (List.lastIndex list)] |> List.count check
 
 pub
 part1 : Unit -> Int
