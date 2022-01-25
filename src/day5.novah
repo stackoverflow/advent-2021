@@ -7,11 +7,10 @@ typealias Coords = { x1 : Int, x2 : Int, y1 : Int, y2 : Int }
 #[noWarn]
 parseLine : String -> Coords
 parseLine line =
-  let [x1, y1, x2, y2] =
-    Re.find #"(\d+),(\d+) -> (\d+),(\d+)" line
-      |> removeFirst
-      |> List.map int
-  {x1, x2, y1, y2}
+  Re.find #"(\d+),(\d+) -> (\d+),(\d+)" line
+    |> removeFirst
+    |> List.map int
+    |> \[x1, y1, x2, y2] -> {x1, x2, y1, y2}
 
 data : List Coords
 data = readProcessTestData 5 "\n" parseLine
@@ -23,11 +22,10 @@ findDuplicates filter =
     case points of
       [] -> acc
       [pp :: rest] ->
-        let updated =
-          case pp of
-            p if p.x1 == p.x2 -> [p.y1 .. p.y2] |> List.map (\y -> format "%s:%s" [p.x1, y])
-            p if p.y1 == p.y2 -> [p.x1 .. p.x2] |> List.map (\x -> format "%s:%s" [x, p.y1])
-            p -> List.zipWith (\x y -> format "%s:%s" [x, y]) [p.x1 .. p.x2] [p.y1 .. p.y2]
+        let updated = case pp of
+          p if p.x1 == p.x2 -> [p.y1 .. p.y2] |> List.map (\y -> p.x1 ; y)
+          p if p.y1 == p.y2 -> [p.x1 .. p.x2] |> List.map (\x -> x ; p.y1)
+          p -> List.zipWith (;) [p.x1 .. p.x2] [p.y1 .. p.y2]
         
         let map =
           Map.withLinear acc \m ->
@@ -50,3 +48,9 @@ pub
 part2 : Unit -> Int
 part2 _ =
   findDuplicates (\_ -> true)
+
+pub
+main : Array String -> Unit
+main _ =
+  println (part1 ())
+  println (part2 ())
