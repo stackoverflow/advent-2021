@@ -13,9 +13,9 @@ input =
 
 findIndex : List (List Char) -> Int -> Int -> Char -> Int
 findIndex image x y fillChar =
-  [ (x - 1) ; (y - 1), x ; (y - 1), (x + 1) ; (y - 1)
-  , (x - 1) ; y, x ; y, (x + 1) ; y
-  , (x - 1) ; (y + 1), x ; (y + 1), (x + 1) ; (y + 1)
+  [ (x - 1 ; y - 1), (x ; y - 1), (x + 1 ; y - 1)
+  , (x - 1 ; y), (x ; y), (x + 1 ; y)
+  , (x - 1 ; y + 1), (x ; y + 1), (x + 1 ; y + 1)
   ] |> List.map (\(xx ; yy) -> List.nth (yy - 1) image ? List.nth (xx - 1) ?: fillChar)
     |> List.map (\c -> if c == '#' then "1" else "0") |> String.join ""
     |> toInt2

@@ -22,14 +22,14 @@ input = readTestData 13 |> parse
 fold : String -> Int -> Set (Tuple Int Int) -> Set (Tuple Int Int)
 fold axis where coords =
   if axis == "x" then
-    coords |> Set.filter (\(x ; _) -> (x: Int) != where) |> Set.map (\(x ; y) ->
+    coords |> Set.filter (\(x ; _) -> x != where) |> Set.map (\(x ; y) ->
       if x >= where then
         let newx = Math.abs ((x - where) - where)
         newx ; y
       else x ; y
     )
   else
-    coords |> Set.filter (\(_ ; y) -> (y: Int) != where) |> Set.map (\(x ; y) ->
+    coords |> Set.filter (\(_ ; y) -> y != where) |> Set.map (\(x ; y) ->
       if y >= where then
         let newy = Math.abs ((y - where) - where)
         x ; newy
@@ -37,7 +37,7 @@ fold axis where coords =
     )
 
 plot : Set (Tuple Int Int) -> Unit
-plot (coords: Set (Tuple Int Int)) =
+plot coords =
   let maxX = (Set.maxOf fst coords)!!
   let maxY = (Set.maxOf snd coords)!!
   let yy = atom 0
@@ -47,7 +47,7 @@ plot (coords: Set (Tuple Int Int)) =
         println ""
         reset y yy
         ()
-      print if Set.contains (x ; y) coords then "#" else "."
+      print if (x ; y) `in?` coords then "#" else "."
 
 pub
 part1 : Unit -> Int

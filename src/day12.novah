@@ -22,8 +22,8 @@ findPaths acc allow path =
 pub
 part1 : Unit -> Int
 part1 _ =
-  let allow acc value =
-    value == "end" || Char#isUpperCase(value.[0]) || not (List.contains value acc)
+  let allow (acc : List String) value =
+    value == "end" || Char#isUpperCase(value.[0]) || value `notIn?` acc
   
   findPaths [] allow "start" |> List.size
 
@@ -33,7 +33,7 @@ part2 _ =
   let allow acc value =
     let lowers = List.filter (\v -> v != "start" && v != "end" && Char#isLowerCase(v.[0])) acc
     let dups = List.size lowers > (Set.fromList lowers |> Set.size)
-    let should = if dups then not (List.contains value acc) else (List.filter (_ == value) acc |> List.size) < 2
+    let should = if dups then value `notIn?` acc else (List.filter (_ == value) acc |> List.size) < 2
     value != "start" && (Char#isUpperCase(value.[0]) || value == "end" || should)
   
   findPaths [] allow "start" |> List.size

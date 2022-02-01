@@ -19,7 +19,7 @@ step target p =
   let x = p.x + p.vx
   let y = p.y + p.vy
   let highest = Math.max y p.highest
-  let hit = x `inRange` target.x && y `inRange` target.y
+  let hit = x `in?` target.x && y `in?` target.y
   { x, y, vx, vy: p.vy - 1, highest, hit }
 
 runSteps : Probe -> { x : Range Int, y : Range Int } -> Probe

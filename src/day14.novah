@@ -8,7 +8,7 @@ increment key amount map =
   Map.put key (Option.maybe amount (_ + amount) v) map
 
 mapTemplate : List String -> Map String Int64
-mapTemplate (list : List String) =
+mapTemplate list =
   Map.withLinear (Map.new []) \map ->
     List.forEach [0 ... List.lastIndex list] \i ->
       increment (list.[i] ++ list.[i + 1]) 1L map
@@ -44,7 +44,7 @@ countElements vals =
         increment k1 count map
         increment k2 count map
         ()
-  let mapper v = if Math.isOdd v then (v + 1L) / 2L else v / 2L
+  let mapper v = if Math.odd? v then (v + 1L) / 2L else v / 2L
   Map.mapValues (\_ v -> mapper v) newmap
 
 runSteps : Int -> Int64

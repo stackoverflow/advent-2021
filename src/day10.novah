@@ -33,7 +33,7 @@ part2 _ =
   let map = Map.new ['(' ; 1L, '[' ; 2L, '{' ; 3L, '<' ; 4L]
   let res =
     input
-      |> List.filter (\(invalid ; _) -> Option.isNone invalid)
+      |> List.filter (\(invalid ; _) -> Option.none? invalid)
       |> List.map (\(_ ; stack) ->
         List.map (\(c : Char) -> map.[c]) stack
           |> List.foldl (\acc n -> acc * 5L + n) 0L

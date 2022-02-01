@@ -27,7 +27,7 @@ part2 _ =
     mapIndexed (\y list -> mapIndexed (\x num -> if lowestNeighbor input x y num then Some (x ; y) else None) list) input
       |> flatten |> removeNones
   
-  let contains acc (x ; y) as tup = not (Set.contains tup acc) && (nth y input ? nth x |> Option.isSome)
+  let contains {{_}} acc (x ; y) as tup = tup `notIn?` acc && (nth y input ? nth x |> Option.some?)
   let isBasin v (x ; y) = input.[y].[x] > v && input.[y].[x] != 9
 
   let findBasin acc = case _ of
