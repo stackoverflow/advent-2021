@@ -10,7 +10,7 @@ input =
 pub
 part1 : Unit -> Int
 part1 _ =
-  let uniques str = (String.size str) `in?` #{2, 3, 4, 7}
+  let uniques {{_}} str = len str `in?` #{2, 3, 4, 7}
   List.map (_ ! 1) input
     |> List.sumOf (List.count uniques)
 
@@ -18,18 +18,18 @@ part1 _ =
 pub
 part2 : Unit -> Int
 part2 _ =
-  let intersect s1 s2 = Set.intersection s1 s2 |> Set.size
+  let intersect s1 s2 = Set.intersection s1 s2 |> len
   let findNumber (map : Map Int (Set a)) possibilities size i1 i7 i4 =
     possibilities
       |> List.find (\x ->
-        Set.size x == size
+        len x == size
           && intersect x map.[1] == i1
           && intersect x map.[7] == i7
           && intersect x map.[4] == i4
       ) |> _!!
   
   let solve [ns, sol] =
-    let nums = ns |> List.sortBy String.size |> List.map String.toSet
+    let nums = ns |> List.sortBy len |> List.map String.toSet
     let baseNumbers = Map.new [1 ; nums.[0], 7 ; nums.[1], 4 ; nums.[2], 8 ; nums.[-1]]
     let allNumbers =
       baseNumbers

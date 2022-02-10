@@ -53,7 +53,7 @@ pub
 part1 : Unit -> Int
 part1 _ =
   let (axis ; where) = input.folds.[0]
-  fold axis where input.coords |> Set.size
+  fold axis where input.coords |> len
 
 pub
 part2 : Unit -> Int
@@ -63,4 +63,4 @@ part2 _ =
     swap (fold axis where) coords
     ()
   plot (deref coords)
-  Set.size (deref coords)
+  len (deref coords)

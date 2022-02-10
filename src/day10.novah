@@ -38,4 +38,4 @@ part2 _ =
         List.map (\(c : Char) -> map.[c]) stack
           |> List.foldl (\acc n -> acc * 5L + n) 0L
       )
-  (List.sort res).[List.size res / 2]
+  (List.sort res).[len res / 2]

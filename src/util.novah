@@ -43,5 +43,5 @@ toInt2 = Int32#parseInt(_, 2)
 pub
 zeroPad : Int -> String -> String
 zeroPad amount str =
-  if String.size str >= amount then str
+  if len str >= amount then str
   else zeroPad amount ("0" ++ str)

@@ -35,7 +35,7 @@ findDuplicates filter =
             m
         allCoords map rest
   let solved = allCoords (Map.new []) coords
-  Map.filter (\_ v -> v > 1) solved |> Map.size |> int
+  Map.filter (\_ v -> v > 1) solved |> len |> int
 
 pub
 part1 : Unit -> Int

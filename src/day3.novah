@@ -11,7 +11,7 @@ isChar i c str = str.[i] == c
 pub
 part1 : Unit -> Int
 part1 _ =
-  let threshold = (List.size data) / 2
+  let threshold = (len data) / 2
   let invert c = if c == '0' then '1' else '0'
   let gamma =
     List.map (\i -> List.count (isChar i '1') data) (String.indices data.[0])
@@ -30,7 +30,7 @@ part2 _ =
   
   let calculate dataa pred =
     let go entries i =
-      if List.size entries == 1 then entries else divider entries i pred
+      if len entries == 1 then entries else divider entries i pred
     (List.foldl go dataa (String.indices dataa.[0])).[0]
 
   let o2 = calculate data (>=) |> toInt2

@@ -35,7 +35,7 @@ parseOp bits =
     fst (parseUntil [] packetBits (\_ bs -> String.empty? bs)) ; restBits
   else // number of packets
     let (total ; rest2) = parseBits 11 rest
-    parseUntil [] rest2 (\acc _ -> List.size acc == int total)
+    parseUntil [] rest2 (\acc _ -> len acc == int total)
 
 parsePacket : String -> Tuple Packet String
 parsePacket bits =
