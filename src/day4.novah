@@ -25,14 +25,14 @@ data = readTestData 4 |> String.split "\n\n" |> parseLines
 won : List Int -> Int -> List (List Int) -> Boolean
 won numbers pos board =
   let nums = List.take pos numbers |> Set.fromList
-  let filled rowcol = Set.containsAll? rowcol nums
-  List.any? filled board
+  let filled rowcol = Set.containsAll rowcol nums
+  List.any filled board
 
 calculateScore : { pos : Int, numbers : List Int, winner : List (List Int) | r } -> Int
 calculateScore game =
   let nums = List.take game.pos game.numbers |> Set.fromList
   List.flatten game.winner
-    |> List.remove (\x -> x `in?` nums)
+    |> List.remove (\x -> x `isIn` nums)
     |> Set.fromList
     |> Set.foldl (+) 0
     |> _ * (game.numbers.[game.pos - 1])

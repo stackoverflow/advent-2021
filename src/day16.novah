@@ -32,7 +32,7 @@ parseOp bits =
   if i == 0L then // size packet
     let (length ; rest2) = parseBits 15 rest
     let (packetBits ; restBits) = String.take (int length) rest2 ; String.drop (int length) rest2
-    fst (parseUntil [] packetBits (\_ bs -> String.empty? bs)) ; restBits
+    fst (parseUntil [] packetBits (\_ bs -> String.isEmpty bs)) ; restBits
   else // number of packets
     let (total ; rest2) = parseBits 11 rest
     parseUntil [] rest2 (\acc _ -> len acc == int total)

@@ -30,11 +30,11 @@ max {{_}} list = (List.max list)!!
 
 pub
 linear : List a -> List a
-linear (list : List a) = list#linear()
+linear list = list#linear()
 
 pub
 forked : List a -> List a
-forked (list : List a) = list#forked()
+forked list = list#forked()
 
 pub
 toInt2 : String -> Int32
@@ -43,5 +43,7 @@ toInt2 = Int32#parseInt(_, 2)
 pub
 zeroPad : Int -> String -> String
 zeroPad amount str =
-  if len str >= amount then str
-  else zeroPad amount ("0" ++ str)
+  if len str >= amount then
+    str
+  else
+    zeroPad amount ("0" ++ str)

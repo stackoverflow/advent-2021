@@ -35,7 +35,7 @@ aStar start hFunc neighbors =
 
     List.forEach (neighbors s) \(Vertex _ _ v) as s2 ->
       let g = pathCost.[s] + v
-      if not (Map.hasKey? s2 pathCost) || g < pathCost.[s2] then
+      if not (Map.hasKey s2 pathCost) || g < pathCost.[s2] then
         q#add(Pair (g + hFunc s2) s2)
         Map.put s2 g pathCost
         ()

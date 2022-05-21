@@ -10,7 +10,7 @@ input =
 pub
 part1 : Unit -> Int
 part1 _ =
-  let uniques {{_}} str = len str `in?` #{2, 3, 4, 7}
+  let uniques {{_}} str = len str `isIn` #{2, 3, 4, 7}
   List.map (_ ! 1) input
     |> List.sumOf (List.count uniques)
 

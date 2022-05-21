@@ -23,7 +23,7 @@ pub
 part1 : Unit -> Int
 part1 _ =
   let allow (acc : List String) value =
-    value == "end" || Char#isUpperCase(value.[0]) || value `notIn?` acc
+    value == "end" || Char#isUpperCase(value.[0]) || value `notIn` acc
   
   findPaths [] allow "start" |> len
 
@@ -33,7 +33,7 @@ part2 _ =
   let allow acc value =
     let lowers = List.filter (\v -> v != "start" && v != "end" && Char#isLowerCase(v.[0])) acc
     let dups = len lowers > (Set.fromList lowers |> len)
-    let should = if dups then value `notIn?` acc else (List.filter (_ == value) acc |> len) < 2
+    let should = if dups then value `notIn` acc else (List.filter (_ == value) acc |> len) < 2
     value != "start" && (Char#isUpperCase(value.[0]) || value == "end" || should)
   
   findPaths [] allow "start" |> len

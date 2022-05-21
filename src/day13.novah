@@ -47,7 +47,7 @@ plot coords =
         println ""
         reset y yy
         ()
-      print if (x ; y) `in?` coords then "#" else "."
+      print if (x ; y) `isIn` coords then "#" else "."
 
 pub
 part1 : Unit -> Int

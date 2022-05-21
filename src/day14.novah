@@ -44,7 +44,7 @@ countElements vals =
         increment k1 count map
         increment k2 count map
         ()
-  let mapper v = if Math.odd? v then (v + 1L) / 2L else v / 2L
+  let mapper v = if Math.isOdd v then (v + 1L) / 2L else v / 2L
   Map.mapValues (\_ v -> mapper v) newmap
 
 runSteps : Int -> Int64

@@ -43,7 +43,8 @@ tryExplode = case _ of
   Pair (Regular r1 _) (Regular r2 _) 4 -> { exploded: true, n: Regular 0 4, left: r1, right: r2}
   (Pair n1 n2 depth) as snum ->
     let {exploded, n, left, right} = tryExplode n1
-    if exploded then { exploded: true, n: Pair n (tryAddLeft right n2) depth, left, right: 0 }
+    if exploded then
+      { exploded: true, n: Pair n (tryAddLeft right n2) depth, left, right: 0 }
     else
       let {exploded: exploded2, n: rightnum, left: left2, right: right2} = tryExplode n2
       if exploded2 then { exploded: true, n: Pair (tryAddRight left2 n1) rightnum depth, left: 0, right: right2 }
@@ -55,7 +56,8 @@ trySplit = case _ of
   (Regular _ _) as n -> false ; n
   (Pair n1 n2 depth) as n ->
     let (split ; splitnum) = trySplit n1
-    if split then true ; Pair splitnum n2 depth
+    if split then
+      true ; Pair splitnum n2 depth
     else
       let (split2 ; splitnum2) = trySplit n2
       if split2 then true ; Pair n1 splitnum2 depth

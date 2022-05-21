@@ -15,7 +15,7 @@ step data =
   let neighbors x y =
     [ (x - 1) ; y, (x + 1) ; y, x ; (y - 1), x ; (y + 1)
     , (x - 1) ; (y - 1), (x + 1) ; (y - 1), (x - 1) ; (y + 1), (x + 1) ; (y + 1)
-    ] |> List.filter (\(xx ; yy) -> xx `in?` (0 .. 9) && yy `in?` (0 .. 9))
+    ] |> List.filter (\(xx ; yy) -> xx `isIn` (0 .. 9) && yy `isIn` (0 .. 9))
   
   let flash octs =
     let toFlash = linear []
@@ -55,7 +55,7 @@ part2 : Unit -> Int
 part2 _ =
   let inSync (data : List (List Int)) =
     let x = data.[0].[0]
-    List.all? (List.all? (_ == x)) data
+    List.all (List.all (_ == x)) data
   
   let go steps data =
     if inSync data then steps
