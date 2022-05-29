@@ -6,6 +6,7 @@ foreign import novah.Ref
 
 import util (readTestData, addAll, linear)
 
+#[derive: {equalsVertex: "Equals"}]
 type Vertex = Vertex Int Int Int
 
 type Pair = Pair Int Vertex
