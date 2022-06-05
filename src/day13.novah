@@ -43,9 +43,9 @@ plot coords =
   let yy = atom 0
   List.forEach [0 .. maxY] \y ->
     List.forEach [0 .. maxX] \x ->
-      if y > (deref yy) then
+      if y > @yy then
         println ""
-        reset y yy
+        yy := y
         ()
       print if (x ; y) `isIn` coords then "#" else "."
 
@@ -60,7 +60,6 @@ part2 : Unit -> Int
 part2 _ =
   let coords = atom input.coords
   List.forEach input.folds \(axis ; where) ->
-    swap (fold axis where) coords
-    ()
-  plot (deref coords)
-  len (deref coords)
+    coords ::= (fold axis where)
+  plot @coords
+  len @coords

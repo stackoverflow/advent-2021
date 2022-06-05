@@ -51,9 +51,8 @@ runSteps : Int -> Int64
 runSteps amount =
   let map = atom input.template
   forEachRange (0 ... amount) \_ ->
-    swap (step input.rules) map
-    ()
-  let count = countElements (deref map)
+    map ::= (step input.rules)
+  let count = countElements @map
   let res = Map.toList count |> List.map snd |> List.sort
   res.[-1] - res.[0]
 

@@ -37,10 +37,10 @@ part1 _ =
   let highest = atom 0
   List.forEach [1 .. 300] \y ->
     let p = runSteps (probe 6 y) input
-    if p.hit && (deref highest) < p.highest then
-      reset p.highest highest
+    if p.hit && @highest < p.highest then
+      highest := p.highest
       ()
-  deref highest
+  @highest
 
 pub
 part2 : Unit -> Int
