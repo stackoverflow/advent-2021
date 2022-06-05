@@ -46,8 +46,7 @@ part1 : Unit -> Int
 part1 _ =
   let res = atom input
   List.forEach [1 .. 100] \_ ->
-    swap step res
-    ()
+    res ::= step
   flashes#-val
 
 pub
