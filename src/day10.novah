@@ -1,6 +1,6 @@
 module day10
 
-import util (readProcessTestData)
+import util (readProcessTestData, !!!)
 
 pairs : Map Char Char
 pairs = Map.new [')' ; '(', ']' ; '[', '}' ; '{', '>' ; '<']
@@ -25,7 +25,7 @@ part1 _ =
   let map = Map.new ['(' ; 3, '[' ; 57, '{' ; 1197, '<' ; 25137]
   input
     |> List.mapSome (\(invalid ; _) -> invalid)
-    |> List.sumOf (\(c : Char) -> map.[c])
+    |> List.sumOf (\(c : Char) -> map !!! c)
 
 pub
 part2 : Unit -> Int64
@@ -35,7 +35,7 @@ part2 _ =
     input
       |> List.filter (\(invalid ; _) -> Option.isNone invalid)
       |> List.map (\(_ ; stack) ->
-        List.map (\(c : Char) -> map.[c]) stack
+        List.map (\(c : Char) -> map !!! c) stack
           |> List.foldl (\acc n -> acc * 5L + n) 0L
       )
   (List.sort res).[len res / 2]

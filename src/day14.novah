@@ -1,6 +1,6 @@
 module day14
 
-import util (readTestData)
+import util (readTestData, !!!)
 
 increment : k -> Int64 -> Map k Int64 -> Map k Int64
 increment key amount map =
@@ -27,9 +27,9 @@ step : Map String String -> Map String Int64 -> Map String Int64
 step rules vals =
   Map.withLinear (Map.new []) \map ->
     Map.forEach vals \(pair : String) count ->
-      let k1 = pair.[0] |> toString
-      let k2 = pair.[1] |> toString
-      let v = rules.[pair]
+      let k1 = pair ! 0 |> toString
+      let k2 = pair ! 1 |> toString
+      let v = rules !!! pair
       increment (k1 ++ v) count map
       increment (v ++ k2) count map
       ()
@@ -39,8 +39,8 @@ countElements vals =
   let newmap =
     Map.withLinear (Map.new []) \map ->
       Map.forEach vals \(pair : String) count ->
-        let k1 = pair.[0] |> toString
-        let k2 = pair.[1] |> toString
+        let k1 = pair ! 0 |> toString
+        let k2 = pair ! 1 |> toString
         increment k1 count map
         increment k2 count map
         ()

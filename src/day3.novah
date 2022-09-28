@@ -6,7 +6,7 @@ data : List String
 data = readProcessTestData 3 "\n" identity
 
 isChar : Int -> Char -> String -> Boolean
-isChar i c str = str.[i] == c
+isChar i c str = str ! i == c
 
 pub
 part1 : Unit -> Int

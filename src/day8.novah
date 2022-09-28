@@ -1,6 +1,6 @@
 module day8
 
-import util (readProcessTestData)
+import util (readProcessTestData, !!!)
 
 input : List (List (List String))
 input =
@@ -11,7 +11,7 @@ pub
 part1 : Unit -> Int
 part1 _ =
   let uniques {{_}} str = len str `isIn` #{2, 3, 4, 7}
-  List.map (_ ! 1) input
+  List.map _.[1] input
     |> List.sumOf (List.count uniques)
 
 #[noWarn]
@@ -23,9 +23,9 @@ part2 _ =
     possibilities
       |> List.find (\x ->
         len x == size
-          && intersect x map.[1] == i1
-          && intersect x map.[7] == i7
-          && intersect x map.[4] == i4
+          && intersect x (map !!! 1) == i1
+          && intersect x (map !!! 7) == i7
+          && intersect x (map !!! 4) == i4
       ) |> _!!
   
   let solve [ns, sol] =
@@ -41,7 +41,7 @@ part2 _ =
         |> Map.put 9 (findNumber baseNumbers nums 6 2 3 4)
     let map = Map.mapValues (\k v -> v ; k) allNumbers |> Map.values |> Map.new
     sol
-      |> List.map (\x -> map.[String.toSet x] |> toString)
+      |> List.map (\x -> map !!! String.toSet x |> toString)
       |> String.join "" |> int
   
   List.sumOf solve input

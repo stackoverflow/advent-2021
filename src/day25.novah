@@ -15,7 +15,7 @@ part1 _ =
   let move matrix char =
     matrix |> List.map (\line ->
       let res = line |> String.replace (format "%s." [char]) (format ".%s" [char])
-      if line.[0] == '.' && line.[-1] == char then
+      if line ! 0 == '.' && line ! -1 == char then
         toString char ++ String.substring 1 (String.lastIndex res) res ++ "."
       else res
     )

@@ -1,6 +1,6 @@
 module day16
 
-import util (readTestData, zeroPad, min, max)
+import util (readTestData, zeroPad, min, max, !!!)
 
 type Packet
   = Literal { version : Int64, typ : Int64, num : Int64 }
@@ -15,7 +15,7 @@ parseBits amount bits = toInt2 (String.take amount bits) ; String.drop amount bi
 parseNum : String -> String -> Tuple Int64 String
 parseNum acc bits =
   let partial = acc ++ (String.substring 1 5 bits)
-  if bits.[0] == '1' then
+  if bits ! 0 == '1' then
     parseNum partial (String.drop 5 bits)
   else
     toInt2 partial ; (String.drop 5 bits)
@@ -75,5 +75,6 @@ part2 _ =
     Literal l -> l.num
     Op op ->
       let vals = List.map parse op.packets
-      ops.[op.typ] vals
+      let fn = (ops !!! op.typ)
+      fn vals
   parse input

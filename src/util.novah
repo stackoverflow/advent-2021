@@ -47,3 +47,7 @@ zeroPad amount str =
     str
   else
     zeroPad amount ("0" ++ str)
+
+pub
+(!!!) : Map k v -> k -> v
+(!!!) m k = (Map.get k m)!!

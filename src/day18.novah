@@ -8,7 +8,7 @@ type SnailNumber
   | Pair SnailNumber SnailNumber Int
 
 parseNumber : Int -> String -> Tuple SnailNumber String
-parseNumber depth num = case num.[0] of
+parseNumber depth num = case num ! 0 of
   '[' ->
     let (n1 ; line) = parseNumber (depth + 1) (String.drop 1 num)
     let (n2 ; line2) = parseNumber (depth + 1) (String.drop 1 line)

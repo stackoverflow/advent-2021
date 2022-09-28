@@ -4,7 +4,7 @@ foreign import java.util.Comparator
 foreign import java.util.PriorityQueue
 foreign import novah.Ref
 
-import util (readTestData, addAll, linear)
+import util (readTestData, addAll, linear, !!!)
 
 #[derive: {equalsVertex: "Equals"}]
 type Vertex = Vertex Int Int Int
@@ -32,11 +32,11 @@ aStar start hFunc neighbors =
 
   while res#-val < 0 || q#size() != 0 do
     let (Pair _ s) = q#poll()
-    if hFunc s == 0 then res#-val <- pathCost.[s]
+    if hFunc s == 0 then res#-val <- pathCost !!! s
 
     List.forEach (neighbors s) \(Vertex _ _ v) as s2 ->
-      let g = pathCost.[s] + v
-      if not (Map.hasKey s2 pathCost) || g < pathCost.[s2] then
+      let g = (pathCost !!! s) + v
+      if not (Map.hasKey s2 pathCost) || g < (pathCost !!! s2) then
         q#add(Pair (g + hFunc s2) s2)
         Map.put s2 g pathCost
         ()

@@ -9,7 +9,7 @@ pub
 part1 : Unit -> Int
 part1 _ =
   let run pos total r player =
-    if (total ! player) < 1000 then
+    if total.[player] < 1000 then
       let p = 1 - player
       let npos = pos |> updateAt p (\v -> (v + 3 * r + 3) % 10)
       let tot = total |> updateAt p (\t -> t + npos.[p] + 1)
