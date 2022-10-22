@@ -17,11 +17,12 @@ mapTemplate list =
 #[noWarn]
 input : { rules : Map String String, template : Map String Int64 }
 input =
-  readTestData 14 |> String.split "\n\n" |> (\[start, rules] ->
+  readTestData 14
+  |> String.split "\n\n"
+  |> (\[start, rules] ->
     let template = String.toList start |> List.map toString |> mapTemplate
     let assoc str = String.split " -> " str |> \[k, v] -> k ; v
-    {template, rules: String.lines rules |> Map.associate assoc}
-  )
+    { template, rules: String.lines rules |> Map.associate assoc })
 
 step : Map String String -> Map String Int64 -> Map String Int64
 step rules vals =
@@ -58,8 +59,10 @@ runSteps amount =
 
 pub
 part1 : Unit -> Int64
-part1 _ = runSteps 10
+part1 _ =
+  runSteps 10
 
 pub
 part2 : Unit -> Int64
-part2 _ = runSteps 40
+part2 _ =
+  runSteps 40

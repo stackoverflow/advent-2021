@@ -8,17 +8,18 @@ typealias Coords = { x1 : Int, x2 : Int, y1 : Int, y2 : Int }
 parseLine : String -> Coords
 parseLine line =
   Re.find #"(\d+),(\d+) -> (\d+),(\d+)" line
-    |> removeFirst
-    |> List.map int
-    |> \[x1, y1, x2, y2] -> {x1, x2, y1, y2}
+  |> removeFirst
+  |> List.map int
+  |> \[x1, y1, x2, y2] -> { x1, x2, y1, y2 }
 
 data : List Coords
-data = readProcessTestData 5 "\n" parseLine
+data =
+  readProcessTestData 5 "\n" parseLine
 
 findDuplicates : ({ x1 : Int, x2 : Int, y1 : Int, y2 : Int } -> Boolean) -> Int
 findDuplicates filter =
   let coords = List.filter filter data
-  let allCoords acc (points: List Coords) =
+  let allCoords acc (points : List Coords) =
     case points of
       [] -> acc
       [pp :: rest] ->
@@ -26,7 +27,7 @@ findDuplicates filter =
           p if p.x1 == p.x2 -> [p.y1 .. p.y2] |> List.map (\y -> p.x1 ; y)
           p if p.y1 == p.y2 -> [p.x1 .. p.x2] |> List.map (\x -> x ; p.y1)
           p -> List.zipWith (;) [p.x1 .. p.x2] [p.y1 .. p.y2]
-        
+
         let map =
           Map.withLinear acc \m ->
             List.forEach updated \key ->

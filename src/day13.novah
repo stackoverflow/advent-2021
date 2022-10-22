@@ -7,34 +7,41 @@ parse : String -> { coords : Set (Tuple Int Int), folds : List (Tuple String Int
 parse str =
   let [cs, fs] = String.split "\n\n" str
   let coords =
-    String.lines cs |> List.map (\coord ->
-      String.split "," coord |> (\[x, y] -> int x ; int y)
-    ) |> Set.fromList
-  let folds = String.lines fs |> List.map (\foldd ->
-    let [_, axis, where] = Re.find #"fold along (\w)=(\d+)" foldd
-    axis ; int where
-  )
-  {coords, folds}
+    String.lines cs
+    |> List.map (\coord ->
+      String.split "," coord |> (\[x, y] -> int x ; int y))
+    |> Set.fromList
+  let folds =
+    String.lines fs
+    |> List.map (\foldd ->
+      let [_, axis, where] = Re.find #"fold along (\w)=(\d+)" foldd
+      axis ; int where)
+  { coords, folds }
 
 input : { coords : Set (Tuple Int Int), folds : List (Tuple String Int) }
-input = readTestData 13 |> parse
+input =
+  readTestData 13 |> parse
 
 fold : String -> Int -> Set (Tuple Int Int) -> Set (Tuple Int Int)
 fold axis where coords =
   if axis == "x" then
-    coords |> Set.filter (\(x ; _) -> x != where) |> Set.map (\(x ; y) ->
+    coords
+    |> Set.filter (\(x ; _) -> x != where)
+    |> Set.map (\(x ; y) ->
       if x >= where then
         let newx = Math.abs ((x - where) - where)
         newx ; y
-      else x ; y
-    )
+      else
+        x ; y)
   else
-    coords |> Set.filter (\(_ ; y) -> y != where) |> Set.map (\(x ; y) ->
+    coords
+    |> Set.filter (\(_ ; y) -> y != where)
+    |> Set.map (\(x ; y) ->
       if y >= where then
         let newy = Math.abs ((y - where) - where)
         x ; newy
-      else x ; y
-    )
+      else
+        x ; y)
 
 plot : Set (Tuple Int Int) -> Unit
 plot coords =

@@ -6,19 +6,28 @@ import util (readTestData, toInt2)
 #[noWarn]
 input : Tuple (List Char) (List (List Char))
 input =
-  readTestData 20 |> String.split "\n\n" |> (\[algo, inp] ->
+  readTestData 20
+  |> String.split "\n\n"
+  |> (\[algo, inp] ->
     let image = String.lines inp |> List.map String.toList
-    String.toList algo ; image
-  )
+    String.toList algo ; image)
 
 findIndex : List (List Char) -> Int -> Int -> Char -> Int
 findIndex image x y fillChar =
-  [ (x - 1 ; y - 1), (x ; y - 1), (x + 1 ; y - 1)
-  , (x - 1 ; y), (x ; y), (x + 1 ; y)
-  , (x - 1 ; y + 1), (x ; y + 1), (x + 1 ; y + 1)
-  ] |> List.map (\(xx ; yy) -> List.nth (yy - 1) image ? List.nth (xx - 1) ?: fillChar)
-    |> List.map (\c -> if c == '#' then "1" else "0") |> String.join ""
-    |> toInt2
+  [ (x - 1 ; y - 1)
+  , (x ; y - 1)
+  , (x + 1 ; y - 1)
+  , (x - 1 ; y)
+  , (x ; y)
+  , (x + 1 ; y)
+  , (x - 1 ; y + 1)
+  , (x ; y + 1)
+  , (x + 1 ; y + 1)
+  ]
+  |> List.map (\(xx ; yy) -> List.nth (yy - 1) image ? List.nth (xx - 1) ?: fillChar)
+  |> List.map (\c -> if c == '#' then "1" else "0")
+  |> String.join ""
+  |> toInt2
 
 enhance : List (List Char) -> List Char -> Char -> List (List Char)
 enhance image algorithm fillChar =
@@ -33,18 +42,21 @@ enhance image algorithm fillChar =
 run : Int -> List (List Char) -> List Char -> Int
 run times image algorithm =
   let go n img fillChar =
-    if n <= 0 then img
+    if n <= 0 then
+      img
     else
       let newImage = enhance img algorithm fillChar
       let newChar = algorithm.[if fillChar == '.' then 0 else 511]
       go (n - 1) newImage newChar
-  
+
   go times image '.' |> List.sumOf (List.count (_ == '#'))
 
 pub
 part1 : Unit -> Int
-part1 _ = run 2 (snd input) (fst input)
+part1 _ =
+  run 2 (snd input) (fst input)
 
 pub
 part2 : Unit -> Int
-part2 _ = run 50 (snd input) (fst input)
+part2 _ =
+  run 50 (snd input) (fst input)

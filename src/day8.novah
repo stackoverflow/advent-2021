@@ -4,15 +4,16 @@ import util (readProcessTestData, !!!)
 
 input : List (List (List String))
 input =
-  readProcessTestData 8 "\n"
+  readProcessTestData
+    8
+    "\n"
     (String.split "\\|" >> List.map (String.strip >> String.split " "))
 
 pub
 part1 : Unit -> Int
 part1 _ =
   let uniques {{_}} str = len str `isIn` #{2, 3, 4, 7}
-  List.map _.[1] input
-    |> List.sumOf (List.count uniques)
+  List.map _.[1] input |> List.sumOf (List.count uniques)
 
 #[noWarn]
 pub
@@ -21,27 +22,29 @@ part2 _ =
   let intersect s1 s2 = Set.intersection s1 s2 |> len
   let findNumber (map : Map Int (Set a)) possibilities size i1 i7 i4 =
     possibilities
-      |> List.find (\x ->
-        len x == size
-          && intersect x (map !!! 1) == i1
-          && intersect x (map !!! 7) == i7
-          && intersect x (map !!! 4) == i4
-      ) |> _!!
-  
+    |> List.find (\x ->
+      len x == size
+      && intersect x (map !!! 1) == i1
+      && intersect x (map !!! 7) == i7
+      && intersect x (map !!! 4) == i4)
+    |> _!!
+
   let solve [ns, sol] =
     let nums = ns |> List.sortBy len |> List.map String.toSet
-    let baseNumbers = Map.new [1 ; nums.[0], 7 ; nums.[1], 4 ; nums.[2], 8 ; nums.[-1]]
+    let baseNumbers =
+      Map.new [1 ; nums.[0], 7 ; nums.[1], 4 ; nums.[2], 8 ; nums.[-1]]
     let allNumbers =
       baseNumbers
-        |> Map.put 2 (findNumber baseNumbers nums 5 1 2 2)
-        |> Map.put 5 (findNumber baseNumbers nums 5 1 2 3)
-        |> Map.put 6 (findNumber baseNumbers nums 6 1 2 3)
-        |> Map.put 3 (findNumber baseNumbers nums 5 2 3 3)
-        |> Map.put 0 (findNumber baseNumbers nums 6 2 3 3)
-        |> Map.put 9 (findNumber baseNumbers nums 6 2 3 4)
+      |> Map.put 2 (findNumber baseNumbers nums 5 1 2 2)
+      |> Map.put 5 (findNumber baseNumbers nums 5 1 2 3)
+      |> Map.put 6 (findNumber baseNumbers nums 6 1 2 3)
+      |> Map.put 3 (findNumber baseNumbers nums 5 2 3 3)
+      |> Map.put 0 (findNumber baseNumbers nums 6 2 3 3)
+      |> Map.put 9 (findNumber baseNumbers nums 6 2 3 4)
     let map = Map.mapValues (\k v -> v ; k) allNumbers |> Map.values |> Map.new
     sol
-      |> List.map (\x -> map !!! String.toSet x |> toString)
-      |> String.join "" |> int
-  
+    |> List.map (\x -> map !!! String.toSet x |> toString)
+    |> String.join ""
+    |> int
+
   List.sumOf solve input

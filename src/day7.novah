@@ -3,18 +3,21 @@ module day7
 import util (readProcessTestData)
 
 input : List Int
-input = readProcessTestData 7 "," int
+input =
+  readProcessTestData 7 "," int
 
 fuel : (Int -> Int) -> Int
 fuel fn =
   [(List.minOr 0 input) .. (List.maxOr 0 input)]
-    |> List.minOf (\x -> List.sumOf (\i -> Math.abs (x - i) |> fn) input)
-    |> _!!
+  |> List.minOf (\x -> List.sumOf (\i -> Math.abs (x - i) |> fn) input)
+  |> _!!
 
 pub
 part1 : Unit -> Int
-part1 _ = fuel identity
+part1 _ =
+  fuel identity
 
 pub
 part2 : Unit -> Int
-part2 _ = fuel (\x -> (x * (x + 1)) / 2)
+part2 _ =
+  fuel (\x -> (x * (x + 1)) / 2)

@@ -3,7 +3,8 @@ module day25
 import util (readProcessTestData)
 
 input : List String
-input = readProcessTestData 25 "\n" identity
+input =
+  readProcessTestData 25 "\n" identity
 
 transpose : List String -> List String
 transpose =
@@ -13,17 +14,21 @@ pub
 part1 : Unit -> Int
 part1 _ =
   let move matrix char =
-    matrix |> List.map (\line ->
-      let res = line |> String.replace (format "%s." [char]) (format ".%s" [char])
+    matrix
+    |> List.map (\line ->
+      let res =
+        line |> String.replace (format "%s." [char]) (format ".%s" [char])
       if line ! 0 == '.' && line ! -1 == char then
         toString char ++ String.substring 1 (String.lastIndex res) res ++ "."
-      else res
-    )
-  
+      else
+        res)
+
   let run steps matrix =
     let right = move matrix '>'
     let down = move (transpose right) 'v' |> transpose
-    if down == matrix then steps + 1
-    else run (steps + 1) down
-  
+    if down == matrix then
+      steps + 1
+    else
+      run (steps + 1) down
+
   run 0 input

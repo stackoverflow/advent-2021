@@ -3,7 +3,8 @@ module day1
 import util (readProcessTestData)
 
 data : List Int
-data = readProcessTestData 1 "\n" int
+data =
+  readProcessTestData 1 "\n" int
 
 checkWindow : List Int -> Int
 checkWindow list =
@@ -12,7 +13,8 @@ checkWindow list =
 
 pub
 part1 : Unit -> Int
-part1 _ = checkWindow data
+part1 _ =
+  checkWindow data
 
 pub
 part2 : Unit -> Int

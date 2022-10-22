@@ -9,9 +9,7 @@ readTestData day =
 pub
 readProcessTestData : Int -> String -> (String -> a) -> List a
 readProcessTestData day regex mapper =
-  readTestData day
-    |> String.split regex
-    |> List.map mapper
+  readTestData day |> String.split regex |> List.map mapper
 
 pub
 addAll : List a -> List a -> Unit
@@ -22,23 +20,28 @@ addAll list toAdd =
 
 pub
 min : {{ NumberOps a }} -> List a -> a
-min {{_}} list = (List.min list)!!
+min {{_}} list =
+  (List.min list)!!
 
 pub
 max : {{ NumberOps a }} -> List a -> a
-max {{_}} list = (List.max list)!!
+max {{_}} list =
+  (List.max list)!!
 
 pub
 linear : List a -> List a
-linear list = list#linear()
+linear list =
+  list#linear()
 
 pub
 forked : List a -> List a
-forked list = list#forked()
+forked list =
+  list#forked()
 
 pub
 toInt2 : String -> Int32
-toInt2 = Int32#parseInt(_, 2)
+toInt2 =
+  Int32#parseInt(_, 2)
 
 pub
 zeroPad : Int -> String -> String
@@ -50,4 +53,5 @@ zeroPad amount str =
 
 pub
 (!!!) : Map k v -> k -> v
-(!!!) m k = (Map.get k m)!!
+(!!!) m k =
+  (Map.get k m)!!

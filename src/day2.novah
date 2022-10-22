@@ -12,7 +12,8 @@ toCoord str =
     _ -> { h: 0, d: amount }
 
 data : List { d : Int, h : Int }
-data = readProcessTestData 2 "\n" toCoord
+data =
+  readProcessTestData 2 "\n" toCoord
 
 pub
 part1 : Unit -> Int

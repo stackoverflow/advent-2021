@@ -1,12 +1,12 @@
 module day15
 
+import util (readTestData, addAll, linear, !!!)
+
 foreign import java.util.Comparator
 foreign import java.util.PriorityQueue
 foreign import novah.Ref
 
-import util (readTestData, addAll, linear, !!!)
-
-#[derive: {equalsVertex: "Equals"}]
+#[derive: { equalsVertex: "Equals" }]
 type Vertex = Vertex Int Int Int
 
 type Pair = Pair Int Vertex
@@ -14,12 +14,12 @@ type Pair = Pair Int Vertex
 input : List Vertex
 input =
   readTestData 15
-    |> String.lines
-    |> List.mapIndexed (\y line ->
-      String.toList line |> List.mapIndexed (\x v ->
-        Vertex x y (toString v |> int)
-      )
-    ) |> List.flatten
+  |> String.lines
+  |> List.mapIndexed (\y line ->
+    String.toList line
+    |> List.mapIndexed (\x v ->
+      Vertex x y (toString v |> int)))
+  |> List.flatten
 
 aStar : Vertex -> (Vertex -> Int32) -> (Vertex -> List Vertex) -> Int
 aStar start hFunc neighbors =
@@ -54,13 +54,15 @@ aStarSearch data start =
   let (Vertex gx gy _) = data.[-1]
   let grid = makeGrid data
   let neighbors (Vertex x y _) =
-    [(x - 1) ; y, (x + 1) ; y, x ; (y - 1), x ; (y + 1)] |> List.mapSome (\tup -> Map.get tup grid)
+    [(x - 1) ; y, (x + 1) ; y, x ; (y - 1), x ; (y + 1)]
+    |> List.mapSome (\tup -> Map.get tup grid)
   let hFunc (Vertex x y _) = Math.abs (gx - x) + Math.abs (gy - y)
   aStar start hFunc neighbors
 
 pub
 part1 : Unit -> Int
-part1 _ = aStarSearch input input.[0]
+part1 _ =
+  aStarSearch input input.[0]
 
 pub
 part2 : Unit -> Int
@@ -72,8 +74,12 @@ part2 _ =
     List.forEach [0 .. 4] \x ->
       if x != 0 || y != 0 then
         let toAdd =
-          input |> List.map \(Vertex vx vy vv) ->
+          input
+          |> List.map \(Vertex vx vy vv) ->
             let newV = vv + x + y
-            Vertex (vx + x * size) (vy + y * size) (if newV < 10 then newV else (newV % 10) + 1)
+            Vertex
+              (vx + x * size)
+              (vy + y * size)
+              (if newV < 10 then newV else (newV % 10) + 1)
         addAll newInput toAdd
   aStarSearch newInput input.[0]

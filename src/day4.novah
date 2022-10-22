@@ -13,14 +13,15 @@ parseLines lines =
     let length = len rows.[0]
     let cols = [0 ... length] |> List.map (\i -> List.map _.[i] rows)
     rows ++ cols
-  
+
   { numbers: lines.[0] |> String.split "," |> List.map int
   , boards: List.drop 1 lines |> List.map parseBoard
   , pos: 1
   }
 
 data : Game
-data = readTestData 4 |> String.split "\n\n" |> parseLines
+data =
+  readTestData 4 |> String.split "\n\n" |> parseLines
 
 won : List Int -> Int -> List (List Int) -> Boolean
 won numbers pos board =
@@ -32,10 +33,10 @@ calculateScore : { pos : Int, numbers : List Int, winner : List (List Int) | r }
 calculateScore game =
   let nums = List.take game.pos game.numbers |> Set.fromList
   List.flatten game.winner
-    |> List.remove (\x -> x `isIn` nums)
-    |> Set.fromList
-    |> Set.foldl (+) 0
-    |> _ * (game.numbers.[game.pos - 1])
+  |> List.remove (\x -> x `isIn` nums)
+  |> Set.fromList
+  |> Set.foldl (+) 0
+  |> _ * (game.numbers.[game.pos - 1])
 
 pub
 part1 : Unit -> Int
@@ -44,7 +45,7 @@ part1 _ =
     case List.find (won game.numbers game.pos) game.boards of
       Some win -> { winner: win | game }
       None -> check { .pos -> _ + 1 | game }
-  
+
   check data |> calculateScore
 
 pub
@@ -54,5 +55,5 @@ part2 _ =
     case List.remove (won game.numbers game.pos) game.boards of
       [] -> { winner: game.boards.[0] | game }
       boards -> game |> { .pos -> _ + 1 | _ } |> { .boards = boards | _ } |> check
-  
+
   check data |> calculateScore

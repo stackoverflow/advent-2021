@@ -1,30 +1,39 @@
 module day11
 
-foreign import novah.Ref
-
 import util (addAll, linear, forked, readProcessTestData)
 
+foreign import novah.Ref
+
 input : List (List Int)
-input = readProcessTestData 11 "\n" (String.toList >> List.map (toString >> int))
+input =
+  readProcessTestData 11 "\n" (String.toList >> List.map (toString >> int))
 
 flashes : Ref Int
-flashes = Ref#new(0)
+flashes =
+  Ref#new(0)
 
 step : List (List Int) -> List (List Int)
 step data =
   let neighbors x y =
-    [ (x - 1) ; y, (x + 1) ; y, x ; (y - 1), x ; (y + 1)
-    , (x - 1) ; (y - 1), (x + 1) ; (y - 1), (x - 1) ; (y + 1), (x + 1) ; (y + 1)
-    ] |> List.filter (\(xx ; yy) -> xx `isIn` (0 .. 9) && yy `isIn` (0 .. 9))
-  
+    [ (x - 1) ; y
+    , (x + 1) ; y
+    , x ; (y - 1)
+    , x ; (y + 1)
+    , (x - 1) ; (y - 1)
+    , (x + 1) ; (y - 1)
+    , (x - 1) ; (y + 1)
+    , (x + 1) ; (y + 1)
+    ]
+    |> List.filter (\(xx ; yy) -> xx `isIn` (0 .. 9) && yy `isIn` (0 .. 9))
+
   let flash octs =
     let toFlash = linear []
-    List.forEachIndexed octs (\y l -> List.forEachIndexed l (\x v ->
-      if v == 10 then
-        flashes#update(_ + 1)
-        addAll toFlash (neighbors x y)
-        ()
-    ))
+    List.forEachIndexed octs (\y l ->
+      List.forEachIndexed l (\x v ->
+        if v == 10 then
+          flashes#update(_ + 1)
+          addAll toFlash (neighbors x y)
+          ()))
 
     let run (res : List (List Int)) = case _ of
       [] -> res
@@ -34,10 +43,11 @@ step data =
         if v == 9 then
           flashes#update(_ + 1)
           run newocts (rest ++ neighbors x y)
-        else run newocts rest
+        else
+          run newocts rest
 
     run octs (forked toFlash)
-  
+
   let step1 = data |> List.map (List.map (_ + 1))
   flash step1 |> List.map (List.map (\v -> if v > 9 then 0 else v))
 
@@ -55,9 +65,11 @@ part2 _ =
   let inSync (data : List (List Int)) =
     let x = data.[0].[0]
     List.all (List.all (_ == x)) data
-  
+
   let go steps data =
-    if inSync data then steps
-    else go (steps + 1) (step data)
-  
+    if inSync data then
+      steps
+    else
+      go (steps + 1) (step data)
+
   go 0 input

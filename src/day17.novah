@@ -5,10 +5,12 @@ foreign import novah.Ref
 typealias Probe = { x : Int, y : Int, vx : Int, vy : Int, highest : Int, hit : Boolean }
 
 input : { x : Range Int, y : Range Int }
-input = { x: 14 .. 50, y: -267 .. -225}
+input =
+  { x: 14 .. 50, y: -267 .. -225 }
 
 probe : Int -> Int -> Probe
-probe vx vy = { vx, vy, x: 0, y: 0, hit: false, highest: 0 }
+probe vx vy =
+  { vx, vy, x: 0, y: 0, hit: false, highest: 0 }
 
 step : { x : Range Int, y : Range Int } -> Probe -> Probe
 step target p =
@@ -26,9 +28,11 @@ runSteps : Probe -> { x : Range Int, y : Range Int } -> Probe
 runSteps prob target =
   let bottom = Math.min (rangeStart target.y) (rangeEnd target.y)
   let go p =
-    if p.hit || p.y <= bottom then p
-    else go (step target p)
-  
+    if p.hit || p.y <= bottom then
+      p
+    else
+      go (step target p)
+
   go prob
 
 pub

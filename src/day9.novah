@@ -1,33 +1,54 @@
 module day9
 
-import novah.list (map, mapIndexed, filterIndexed, flatten, nth, sumOf, removeNones, filter, sortBy, size, reverse, take, foldl)
+import novah.list
+  ( map
+  , mapIndexed
+  , filterIndexed
+  , flatten
+  , nth
+  , sumOf
+  , removeNones
+  , filter
+  , sortBy
+  , size
+  , reverse
+  , take
+  , foldl
+  )
 import util (readProcessTestData)
 
 input : List (List Int)
-input = readProcessTestData 9 "\n" (String.toList >> map (toString >> int))
+input =
+  readProcessTestData 9 "\n" (String.toList >> map (toString >> int))
 
 lowestNeighbor : List (List Int) -> Int -> Int -> Int -> Boolean
 lowestNeighbor data x y num =
   let getOr10 matrix xx yy = nth yy matrix ? nth xx ?: 10
   getOr10 data (x - 1) y > num
-    && getOr10 data (x + 1) y > num
-    && getOr10 data x (y - 1) > num
-    && getOr10 data x (y + 1) > num
+  && getOr10 data (x + 1) y > num
+  && getOr10 data x (y - 1) > num
+  && getOr10 data x (y + 1) > num
 
 pub
 part1 : Unit -> Int
 part1 _ =
-  mapIndexed (\y list -> filterIndexed (\x num -> lowestNeighbor input x y num) list) input
-    |> flatten |> sumOf (_ + 1)
+  mapIndexed
+    (\y list -> filterIndexed (\x num -> lowestNeighbor input x y num) list) input
+  |> flatten
+  |> sumOf (_ + 1)
 
 pub
 part2 : Unit -> Int
 part2 _ =
   let origins =
-    mapIndexed (\y list -> mapIndexed (\x num -> if lowestNeighbor input x y num then Some (x ; y) else None) list) input
-      |> flatten |> removeNones
-  
-  let contains {{_}} acc (x ; y) as tup = tup `notIn` acc && (nth y input ? nth x |> Option.isSome)
+    mapIndexed (\y list ->
+      mapIndexed
+        (\x num -> if lowestNeighbor input x y num then Some (x ; y) else None) list) input
+    |> flatten
+    |> removeNones
+
+  let contains {{_}} acc (x ; y) as tup =
+    tup `notIn` acc && (nth y input ? nth x |> Option.isSome)
   let isBasin v (x ; y) = input.[y].[x] > v && input.[y].[x] != 9
 
   let findBasin acc = case _ of
@@ -36,8 +57,12 @@ part2 _ =
       let v = input.[y].[x]
       let new =
         [(x - 1) ; y, (x + 1) ; y, x ; (y - 1), x ; (y + 1)]
-          |> filter (\tup -> contains acc tup && isBasin v tup)
+        |> filter (\tup -> contains acc tup && isBasin v tup)
       findBasin (Set.add index acc) (rest ++ new)
 
   let basins = map (\x -> findBasin #{} [x]) origins
-  basins |> sortBy size |> reverse |> take 3 |> foldl (\acc list -> acc * size list) 1
+  basins
+  |> sortBy size
+  |> reverse
+  |> take 3
+  |> foldl (\acc list -> acc * size list) 1

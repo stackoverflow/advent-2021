@@ -5,9 +5,7 @@ import util (readProcessTestData)
 
 input : List Int64
 input =
-  readProcessTestData 6 "\n" (String.split ",")
-    |> _.[0]
-    |> List.map int64
+  readProcessTestData 6 "\n" (String.split ",") |> _.[0] |> List.map int64
 
 simulate : Int -> Int64
 simulate days =
@@ -15,9 +13,18 @@ simulate days =
     case daysleft of
       0 -> data
       _ ->
-        [ data.[1], data.[2], data.[3], data.[4], data.[5], data.[6], data.[7] + data.[0], data.[8], data.[0]]
-          |> run (daysleft - 1)
-  
+        [ data.[1]
+        , data.[2]
+        , data.[3]
+        , data.[4]
+        , data.[5]
+        , data.[6]
+        , data.[7] + data.[0]
+        , data.[8]
+        , data.[0]
+        ]
+        |> run (daysleft - 1)
+
   let data = do.list
     for x in [0L .. 9L] do
       yield List.count (_ == x) input |> int64
@@ -26,8 +33,10 @@ simulate days =
 
 pub
 part1 : Unit -> Int64
-part1 _ = simulate 80
+part1 _ =
+  simulate 80
 
 pub
 part2 : Unit -> Int64
-part2 _ = simulate 256
+part2 _ =
+  simulate 256

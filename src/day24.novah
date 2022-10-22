@@ -3,7 +3,8 @@ module day24
 import util (readProcessTestData, linear)
 
 input : List (List String)
-input = readProcessTestData 24 "\n" (String.split " ")
+input =
+  readProcessTestData 24 "\n" (String.split " ")
 
 #[noWarn]
 solve : List Int -> List (List String) -> String
@@ -11,29 +12,33 @@ solve inp cmds =
   let stack = linear []
 
   List.forEach [0 .. 13] \i ->
-    let [div, chk, add] = [4, 5, 15] |> List.map (\x -> cmds.[i * 18 + x].[-1] |> int)
+    let [div, chk, add] =
+      [4, 5, 15] |> List.map (\x -> cmds.[i * 18 + x].[-1] |> int)
     if div == 1 then
       stack |> addFirst (i ; add)
       ()
-    else if div == 26 then
-      let (j ; add2) = stack.[0]
-      removeFirst stack
-      inp |> setAt i (inp.[j] + add2 + chk)
-      if inp.[i] > 9 then
-        inp |> setAt j (inp.[j] - (inp.[i] - 9))
-        inp |> setAt i 9
-        ()
-      if inp.[i] < 1 then
-        inp |> setAt j (inp.[j] + 1 - inp.[i])
-        inp |> setAt i 1
-        ()
-  
+    else
+      if div == 26 then
+        let (j ; add2) = stack.[0]
+        removeFirst stack
+        inp |> setAt i (inp.[j] + add2 + chk)
+        if inp.[i] > 9 then
+          inp |> setAt j (inp.[j] - (inp.[i] - 9))
+          inp |> setAt i 9
+          ()
+        if inp.[i] < 1 then
+          inp |> setAt j (inp.[j] + 1 - inp.[i])
+          inp |> setAt i 1
+          ()
+
   List.map toString inp |> String.join ""
 
 pub
 part1 : Unit -> String
-part1 _ = solve (List.repeat 14 9 |> linear) input
+part1 _ =
+  solve (List.repeat 14 9 |> linear) input
 
 pub
 part2 : Unit -> String
-part2 _ = solve (List.repeat 14 1 |> linear) input
+part2 _ =
+  solve (List.repeat 14 1 |> linear) input

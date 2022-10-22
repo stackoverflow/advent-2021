@@ -3,10 +3,12 @@ module day3
 import util (readProcessTestData, toInt2)
 
 data : List String
-data = readProcessTestData 3 "\n" identity
+data =
+  readProcessTestData 3 "\n" identity
 
 isChar : Int -> Char -> String -> Boolean
-isChar i c str = str ! i == c
+isChar i c str =
+  str ! i == c
 
 pub
 part1 : Unit -> Int
@@ -15,8 +17,8 @@ part1 _ =
   let invert c = if c == '0' then '1' else '0'
   let gamma =
     List.map (\i -> List.count (isChar i '1') data) (String.indices data.[0])
-      |> List.map (\i -> if i >= threshold then '1' else '0')
-      |> String.fromList
+    |> List.map (\i -> if i >= threshold then '1' else '0')
+    |> String.fromList
   let epsilon = String.mapString invert gamma
   toInt2 gamma * toInt2 epsilon
 
@@ -25,9 +27,12 @@ part2 : Unit -> Int
 part2 _ =
   let divider ns i pred =
     let char =
-      if List.count (isChar i '1') ns `pred` List.count (isChar i '0') ns then '1' else '0'
+      if List.count (isChar i '1') ns `pred` List.count (isChar i '0') ns then
+        '1'
+      else
+        '0'
     List.filter (isChar i char) ns
-  
+
   let calculate dataa pred =
     let go entries i =
       if len entries == 1 then entries else divider entries i pred

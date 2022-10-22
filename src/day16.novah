@@ -7,10 +7,12 @@ type Packet
   | Op { version : Int64, typ : Int64, packets : List Packet }
 
 toInt2 : String -> Int64
-toInt2 = Int64#parseLong(_, 2)
+toInt2 =
+  Int64#parseLong(_, 2)
 
 parseBits : Int -> String -> Tuple Int64 String
-parseBits amount bits = toInt2 (String.take amount bits) ; String.drop amount bits
+parseBits amount bits =
+  toInt2 (String.take amount bits) ; String.drop amount bits
 
 parseNum : String -> String -> Tuple Int64 String
 parseNum acc bits =
@@ -23,17 +25,21 @@ parseNum acc bits =
 parseOp : String -> Tuple (List Packet) String
 parseOp bits =
   let parseUntil acc bitss stop =
-    if stop acc bitss then acc ; bitss
+    if stop acc bitss then
+      acc ; bitss
     else
       let (pack ; rest) = parsePacket bitss
       parseUntil (addLast pack acc) rest stop
 
   let (i ; rest) = parseBits 1 bits
-  if i == 0L then // size packet
+  if i == 0L then
+    // size packet
     let (length ; rest2) = parseBits 15 rest
-    let (packetBits ; restBits) = String.take (int length) rest2 ; String.drop (int length) rest2
+    let (packetBits ; restBits) =
+      String.take (int length) rest2 ; String.drop (int length) rest2
     fst (parseUntil [] packetBits (\_ bs -> String.isEmpty bs)) ; restBits
-  else // number of packets
+  else
+    // number of packets
     let (total ; rest2) = parseBits 11 rest
     parseUntil [] rest2 (\acc _ -> len acc == int total)
 
@@ -43,17 +49,22 @@ parsePacket bits =
   let (typ ; rest2) = parseBits 3 rest
   if typ == 4L then
     let (num ; restBits) = parseNum "" rest2
-    Literal { version, typ, num} ; restBits
+    Literal { version, typ, num } ; restBits
   else
     let (packets ; restBits) = parseOp rest2
-    Op { version, typ, packets} ; restBits
+    Op { version, typ, packets } ; restBits
 
 input : Packet
 input =
   readTestData 16
-    |> String.toList |> List.map (
-      toString >> (\x -> (Number.parseIntRadix 16 x)!!) >> Int32#toBinaryString(_) >> zeroPad 4
-    ) |> String.join "" |> parsePacket |> fst
+  |> String.toList
+  |> List.map (toString
+    >> (\x -> (Number.parseIntRadix 16 x)!!)
+    >> Int32#toBinaryString(_)
+    >> zeroPad 4)
+  |> String.join ""
+  |> parsePacket
+  |> fst
 
 pub
 part1 : Unit -> Int64
@@ -69,7 +80,14 @@ part2 : Unit -> Int64
 part2 _ =
   let comp fun [x, y] = if x `fun` y then 1L else 0L
   let ops =
-    Map.new [0L ; List.sum, 1L ; List.product, 2L ; min, 3L ; max, 5L ; comp (>), 6L ; comp (<), 7L ; comp (==)]
+    Map.new [ 0L ; List.sum
+    , 1L ; List.product
+    , 2L ; min
+    , 3L ; max
+    , 5L ; comp (>)
+    , 6L ; comp (<)
+    , 7L ; comp (==)
+    ]
 
   let parse = case _ of
     Literal l -> l.num
