@@ -15,7 +15,7 @@ solve inp cmds =
     let [div, chk, add] =
       [4, 5, 15] |> List.map (\x -> cmds.[i * 18 + x].[-1] |> int)
     if div == 1 then
-      stack |> addFirst (i ; add)
+      stack |> List.push (i ; add)
       ()
     else
       if div == 26 then

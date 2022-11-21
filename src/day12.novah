@@ -13,7 +13,7 @@ findPaths
   -> String
   -> List (List String)
 findPaths acc allow path =
-  let newacc = addLast path acc
+  let newacc = acc += path
   if path == "end" then
     [newacc]
   else

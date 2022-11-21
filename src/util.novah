@@ -15,7 +15,7 @@ pub
 addAll : List a -> List a -> Unit
 addAll list toAdd =
   List.forEach toAdd \e ->
-    addLast e list
+    list += e
     ()
 
 pub

@@ -29,7 +29,7 @@ parseOp bits =
       acc ; bitss
     else
       let (pack ; rest) = parsePacket bitss
-      parseUntil (addLast pack acc) rest stop
+      parseUntil (acc += pack) rest stop
 
   let (i ; rest) = parseBits 1 bits
   if i == 0L then
