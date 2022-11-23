@@ -1,6 +1,6 @@
 module day8
 
-import util (readProcessTestData, !!!)
+import util (readProcessTestData)
 
 input : List (List (List String))
 input =
@@ -20,13 +20,13 @@ pub
 part2 : Unit -> Int
 part2 _ =
   let intersect s1 s2 = Set.intersection s1 s2 |> len
-  let findNumber (map : Map Int (Set a)) possibilities size i1 i7 i4 =
+  let findNumber map possibilities size i1 i7 i4 =
     possibilities
     |> List.find (\x ->
       len x == size
-      && intersect x (map !!! 1) == i1
-      && intersect x (map !!! 7) == i7
-      && intersect x (map !!! 4) == i4)
+      && intersect x (map .! 1) == i1
+      && intersect x (map .! 7) == i7
+      && intersect x (map .! 4) == i4)
     |> _!!
 
   let solve [ns, sol] =
@@ -43,8 +43,14 @@ part2 _ =
       |> Map.put 9 (findNumber baseNumbers nums 6 2 3 4)
     let map = Map.mapValues (\k v -> v ; k) allNumbers |> Map.values |> Map.new
     sol
-    |> List.map (\x -> map !!! String.toSet x |> toString)
+    |> List.map (\x -> map .! String.toSet x |> toString)
     |> String.join ""
     |> int
 
   List.sumOf solve input
+
+pub
+main : Array String -> Unit
+main _ =
+  println (part1 ()) // 383
+  println (part2 ()) // 998900

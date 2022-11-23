@@ -1,6 +1,6 @@
 module day16
 
-import util (readTestData, zeroPad, min, max, !!!)
+import util (readTestData, zeroPad, min, max)
 
 type Packet
   = Literal { version : Int64, typ : Int64, num : Int64 }
@@ -93,6 +93,6 @@ part2 _ =
     Literal l -> l.num
     Op op ->
       let vals = List.map parse op.packets
-      let fn = (ops !!! op.typ)
+      let fn = (ops .! op.typ)
       fn vals
   parse input
