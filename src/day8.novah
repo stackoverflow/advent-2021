@@ -12,7 +12,7 @@ input =
 pub
 part1 : Unit -> Int
 part1 _ =
-  let uniques {{_}} str = len str `isIn` #{2, 3, 4, 7}
+  let uniques {{_}} str = len str in #{2, 3, 4, 7}
   List.map _.[1] input |> List.sumOf (List.count uniques)
 
 #[noWarn]
@@ -52,5 +52,7 @@ part2 _ =
 pub
 main : Array String -> Unit
 main _ =
-  println (part1 ()) // 383
-  println (part2 ()) // 998900
+  // 383
+  println (part1 ())
+  // 998900
+  println (part2 ())

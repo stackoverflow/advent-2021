@@ -54,7 +54,7 @@ plot coords =
         println ""
         yy := y
         ()
-      print if (x ; y) `isIn` coords then "#" else "."
+      print if (x ; y) in coords then "#" else "."
 
 pub
 part1 : Unit -> Int

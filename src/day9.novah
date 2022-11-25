@@ -48,7 +48,7 @@ part2 _ =
     |> removeNones
 
   let contains {{_}} acc (x ; y) as tup =
-    tup `notIn` acc && (nth y input ? nth x |> Option.isSome)
+    tup !in acc && (nth y input ? nth x |> Option.isSome)
   let isBasin v (x ; y) = input.[y].[x] > v && input.[y].[x] != 9
 
   let findBasin acc = case _ of

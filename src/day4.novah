@@ -33,7 +33,7 @@ calculateScore : { pos : Int, numbers : List Int, winner : List (List Int) | r }
 calculateScore game =
   let nums = List.take game.pos game.numbers |> Set.fromList
   List.flatten game.winner
-  |> List.remove (\x -> x `isIn` nums)
+  |> List.remove (\x -> x in nums)
   |> Set.fromList
   |> Set.foldl (+) 0
   |> _ * (game.numbers.[game.pos - 1])

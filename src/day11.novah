@@ -24,7 +24,7 @@ step data =
     , (x - 1) ; (y + 1)
     , (x + 1) ; (y + 1)
     ]
-    |> List.filter (\(xx ; yy) -> xx `isIn` (0 .. 9) && yy `isIn` (0 .. 9))
+    |> List.filter (\(xx ; yy) -> xx in (0 .. 9) && yy in (0 .. 9))
 
   let flash octs =
     let toFlash = linear []
