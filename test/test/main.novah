@@ -1,14 +1,6 @@
 module test.main
 
 import day1 as D1
-import day2 as D2
-import day3 as D3
-import day4 as D4
-import day5 as D5
-import day6 as D6
-import day7 as D7
-import day8 as D8
-import day9 as D9
 import day10 as D10
 import day11 as D11
 import day12 as D12
@@ -18,103 +10,152 @@ import day15 as D15
 import day16 as D16
 import day17 as D17
 import day18 as D18
+import day2 as D2
 import day20 as D20
 import day21 as D21
 import day24 as D24
 import day25 as D25
+import day3 as D3
+import day4 as D4
+import day5 as D5
+import day6 as D6
+import day7 as D7
+import day8 as D8
+import day9 as D9
 import novah.test
 
-adventTest : Unit
-adventTest =
-  test "Day 1" \_ ->
-    D1.part1 () `shouldBe` 1754
-    D1.part2 () `shouldBe` 1789
-  
-  test "Day 2" \_ ->
-    D2.part1 () `shouldBe` 1250395
-    D2.part2 () `shouldBe` 1451210346
-  
-  test "Day 3" \_ ->
-    D3.part1 () `shouldBe` 1997414
-    D3.part2 () `shouldBe` 1032597
-  
-  test "Day 4" \_ ->
-    D4.part1 () `shouldBe` 11536
-    D4.part2 () `shouldBe` 1284
-  
-  test "Day 5" \_ ->
-    D5.part1 () `shouldBe` 6841
-    D5.part2 () `shouldBe` 19258
+#[test: "Day 1"]
+day1Test : Unit -> Unit
+day1Test () =
+  D1.part1 () `shouldBe` 1754
+  D1.part2 () `shouldBe` 1789
 
-  test "Day 6" \_ ->
-    D6.part1 () `shouldBe` 355386L
-    D6.part2 () `shouldBe` 1613415325809L
+#[test: "Day 2"]
+day2Test : Unit -> Unit
+day2Test () =
+  D2.part1 () `shouldBe` 1250395
+  D2.part2 () `shouldBe` 1451210346
 
-  test "Day 7" \_ ->
-    D7.part1 () `shouldBe` 344297
-    D7.part2 () `shouldBe` 97164301
-  
-  test "Day 8" \_ ->
-    D8.part1 () `shouldBe` 383
-    D8.part2 () `shouldBe` 998900
+#[test: "Day 3"]
+day3Test : Unit -> Unit
+day3Test () =
+  D3.part1 () `shouldBe` 1997414
+  D3.part2 () `shouldBe` 1032597
 
-  test "Day 9" \_ ->
-    D9.part1 () `shouldBe` 541
-    D9.part2 () `shouldBe` 847504
-  
-  test "Day 10" \_ ->
-    D10.part1 () `shouldBe` 193275
-    D10.part2 () `shouldBe` 2429644557L
-  
-  test "Day 11" \_ ->
-    D11.part1 () `shouldBe` 1613
-    D11.part2 () `shouldBe` 510
-  
-  test "Day 12" \_ ->
-    D12.part1 () `shouldBe` 4775
-    D12.part2 () `shouldBe` 152480
-  
-  test "Day 13" \_ ->
-    D13.part1 () `shouldBe` 755
-    //D13.part2 () `shouldBe` 152480
-  
-  test "Day 14" \_ ->
-    D14.part1 () `shouldBe` 2223L
-    D14.part2 () `shouldBe` 2566282754493L
-  
-  test "Day 15" \_ ->
-    D15.part1 () `shouldBe` 441
-    D15.part2 () `shouldBe` 2849
+#[test: "Day 4"]
+day4Test : Unit -> Unit
+day4Test () =
+  D4.part1 () `shouldBe` 11536
+  D4.part2 () `shouldBe` 1284
 
-  test "Day 16" \_ ->
-    D16.part1 () `shouldBe` 943L
-    D16.part2 () `shouldBe` 167737115857L
-  
-  test "Day 17" \_ ->
-    D17.part1 () `shouldBe` 35511
-    D17.part2 () `shouldBe` 3282
-  
-  test "Day 18" \_ ->
-    D18.part1 () `shouldBe` 3574
-    D18.part2 () `shouldBe` 4763
+#[test: "Day 5"]
+day5Test : Unit -> Unit
+day5Test () =
+  D5.part1 () `shouldBe` 6841
+  D5.part2 () `shouldBe` 19258
 
-  test "Day 20" \_ ->
-    D20.part1 () `shouldBe` 5884
-    D20.part2 () `shouldBe` 19043
+#[test: "Day 6"]
+day6Test : Unit -> Unit
+day6Test () =
+  D6.part1 () `shouldBe` 355386L
+  D6.part2 () `shouldBe` 1613415325809L
 
-  test "Day 21" \_ ->
-    D21.part1 () `shouldBe` 913560
-    D21.part2 () `shouldBe` 110271560863819L
+#[test: "Day 7"]
+day7Test : Unit -> Unit
+day7Test () =
+  D7.part1 () `shouldBe` 344297
+  D7.part2 () `shouldBe` 97164301
 
-  test "Day 24" \_ ->
-    D24.part1 () `shouldBe` "97919997299495"
-    D24.part2 () `shouldBe` "51619131181131"
-  
-  test "Day 25" \_ ->
-    D25.part1 () `shouldBe` 380
+#[test: "Day 8"]
+day8Test : Unit -> Unit
+day8Test () =
+  D8.part1 () `shouldBe` 383
+  D8.part2 () `shouldBe` 998900
+
+#[test: "Day 9"]
+day9Test : Unit -> Unit
+day9Test () =
+  D9.part1 () `shouldBe` 541
+  D9.part2 () `shouldBe` 847504
+
+#[test: "Day 10"]
+day10Test : Unit -> Unit
+day10Test () =
+  D10.part1 () `shouldBe` 193275
+  D10.part2 () `shouldBe` 2429644557L
+
+#[test: "Day 11"]
+day11Test : Unit -> Unit
+day11Test () =
+  D11.part1 () `shouldBe` 1613
+  D11.part2 () `shouldBe` 510
+
+#[test: "Day 12"]
+day12Test : Unit -> Unit
+day12Test () =
+  D12.part1 () `shouldBe` 4775
+  D12.part2 () `shouldBe` 152480
+
+#[test: "Day 13"]
+day13Test : Unit -> Unit
+day13Test () =
+  D13.part1 () `shouldBe` 755
+  D13.part2 () `shouldBe` 152480
+
+#[test: "Day 14"]
+day14Test : Unit -> Unit
+day14Test () =
+  D14.part1 () `shouldBe` 2223L
+  D14.part2 () `shouldBe` 2566282754493L
+
+#[test: "Day 15"]
+day15Test : Unit -> Unit
+day15Test () =
+  D15.part1 () `shouldBe` 441
+  D15.part2 () `shouldBe` 2849
+
+#[test: "Day 16"]
+day16Test : Unit -> Unit
+day16Test () =
+  D16.part1 () `shouldBe` 943L
+  D16.part2 () `shouldBe` 167737115857L
+
+#[test: "Day 17"]
+day17Test : Unit -> Unit
+day17Test () =
+  D17.part1 () `shouldBe` 35511
+  D17.part2 () `shouldBe` 3282
+
+#[test: "Day 18"]
+day18Test : Unit -> Unit
+day18Test () =
+  D18.part1 () `shouldBe` 3574
+  D18.part2 () `shouldBe` 4763
+
+#[test: "Day 20"]
+day20Test : Unit -> Unit
+day20Test () =
+  D20.part1 () `shouldBe` 5884
+  D20.part2 () `shouldBe` 19043
+
+#[test: "Day 21"]
+day21Test : Unit -> Unit
+day21Test () =
+  D21.part1 () `shouldBe` 913560
+  D21.part2 () `shouldBe` 110271560863819L
+
+#[test: "Day 24"]
+day24Test : Unit -> Unit
+day24Test () =
+  D24.part1 () `shouldBe` "97919997299495"
+  D24.part2 () `shouldBe` "51619131181131"
+
+#[test: "Day 25"]
+day25Test : Unit -> Unit
+day25Test () =
+  D25.part1 () `shouldBe` 380
 
 pub
 main : Array String -> Unit
 main _ =
-  runAllTests ()
-  ()
+  runTests () |> exit
